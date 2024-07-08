@@ -1,0 +1,75 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px; /* Adjusted margin top for spacing */
+}
+
+.transcContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+}
+
+.calendarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #000000;
+    padding: 10px 20px; /* Increased padding for better spacing */
+    width: calc(100vw - 40px); /* Adjusted width for responsiveness */
+    border-top-left-radius: 8px; /* Rounded corners for top */
+    border-top-right-radius: 8px;
+    background-color: #FFFFFF; /* White background for header */
+    margin-bottom: 10px; /* Added margin bottom for separation */
+}
+
+.calendarMonths {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    padding: 10px;
+    color: #ADADAD;
+    text-align: center; /* Center text horizontally */
+}
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    color: #ADADAD;
+    background-color: #171C1E;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: calc(100vw - 40px);
+    margin: 0 auto; /* Center horizontally */
+}
+
+.calendarBody {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.calendarHeaderCell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.calendarCell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    background-color: #1E2426;
+    color: #ADADAD;
+    border-radius: 4px;
+}
+
+.currentDate {
+    background-color: #4F8BF9;
+    color: #FFFFFF;
+}

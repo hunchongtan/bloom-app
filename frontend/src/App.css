@@ -1,0 +1,38 @@
+.App {
+  text-align: center;
+}
+
+.dimensionsWarning {
+  height: 100vh;
+  width: 100vw;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  z-index: 999;
+  position: fixed;
+  text-align: center;
+
+}
+
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.Mui-selected {
+  color: var(--primary) !important;
+}
+
+@media only screen and (min-width: 768px) {
+  .dimensionsWarning {
+    display: flex;
+  }
+
+  .content {
+    display: none;
+  }
+}
+
