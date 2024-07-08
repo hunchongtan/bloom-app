@@ -15,13 +15,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #000000;
-    padding: 10px 20px; /* Increased padding for better spacing */
-    width: calc(100vw - 40px); /* Adjusted width for responsiveness */
-    border-top-left-radius: 8px; /* Rounded corners for top */
-    border-top-right-radius: 8px;
-    background-color: #FFFFFF; /* White background for header */
+    width: calc(100vw - 40px);
+    margin: 0 auto; /* Center horizontally */
     margin-bottom: 10px; /* Added margin bottom for separation */
+    color: #000000;
+    border-radius: 8px; /* Rounded corners */
 }
 
 .calendarMonths {
@@ -29,19 +27,20 @@
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
     padding: 10px;
-    color: #ADADAD;
     text-align: center; /* Center text horizontally */
+    color: #ADADAD;
 }
 
 .calendar {
     display: flex;
     flex-direction: column;
-    color: #ADADAD;
-    background-color: #171C1E;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: calc(100vw - 40px);
     margin: 0 auto; /* Center horizontally */
+    margin-bottom: 50px;
+    background-color: #171C1E;
+    color: #ADADAD;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .calendarBody {
@@ -55,8 +54,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: bold;
     padding: 10px;
+    font-weight: bold;
 }
 
 .calendarCell {
@@ -72,4 +71,19 @@
 .currentDate {
     background-color: #4F8BF9;
     color: #FFFFFF;
+}
+
+.startNewEntryButton {
+    width: calc(100vw - 60px);
+    margin: 0 auto; /* Center horizontally */
+    padding: 10px;
+    background-color: #1F7A8C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none; /* Remove underline from Link */
 }

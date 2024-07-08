@@ -1,11 +1,14 @@
+import InsightsNav from "../components/insights/InsightsNav";
+import InsightsPage from "../components/insights/InsightsPage";
 import styles from "../styles/insights/Insights.module.css"
 
 const InsightsView = () => {
     return (
-        <div className={styles.screen}>
+        <div>
+            <InsightsNav />
             <div className={styles.content}>
                 <div className={styles.transcContainer}>
-                    <p style={{fontSize: "0.8rem", fontWeight: "bold", marginBottom: "8px"}}>HELLO WORLD!</p>
+                    <InsightsPage />
                 </div>
             </div>
         </div>

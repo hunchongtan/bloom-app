@@ -26,10 +26,21 @@ const Calendar = () => {
         return new Date(year, month + 1, 0).getDate();
     };
 
+    const getFirstDayOfMonth = (month, year) => {
+        return new Date(year, month, 1).getDay();
+    };
+
     const renderCalendar = () => {
         const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+        const firstDayOfMonth = getFirstDayOfMonth(currentMonth, currentYear);
         const calendarDays = [];
 
+        // Add empty cells for the days before the first day of the month
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            calendarDays.push(<div key={`empty${i}`} className={styles.calendarCell}></div>);
+        }
+
+        // Add cells for each day in the month with a link to /entry
         for (let day = 1; day <= daysInMonth; day++) {
             const isCurrentDate = day === new Date().getDate() && currentMonth === new Date().getMonth() && currentYear === new Date().getFullYear();
             const cellClass = isCurrentDate ? `${styles.calendarCell} ${styles.currentDate}` : styles.calendarCell;
@@ -95,6 +106,9 @@ const Calendar = () => {
                             {renderCalendar()}
                         </div>
                     </div>
+                    <Link to="/new-entry" className={styles.startNewEntryButton}>
+                        🌱 Start new entry
+                    </Link>
                 </div>
             </div>
         </div>
