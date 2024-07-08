@@ -9,6 +9,8 @@
     display: flex;
     flex-direction: column;
     align-items: center; /* Center items horizontally */
+    position: relative; /* Make this parent container relatively positioned */
+    padding-bottom: 100px; /* Space for the buttons */
 }
 
 .calendarHeader {
@@ -28,7 +30,7 @@
     gap: 10px;
     padding: 10px;
     text-align: center; /* Center text horizontally */
-    color: #ADADAD;
+    color: #ffffff;
 }
 
 .calendar {
@@ -36,7 +38,7 @@
     flex-direction: column;
     width: calc(100vw - 40px);
     margin: 0 auto; /* Center horizontally */
-    margin-bottom: 50px;
+    margin-bottom: 20px; /* Adjusted bottom margin for separation */
     background-color: #171C1E;
     color: #ADADAD;
     border-radius: 8px;
@@ -68,16 +70,25 @@
     border-radius: 4px;
 }
 
+.pastDate {
+    color: #b6b6b6;
+}
+
+.futureDate {
+    color: rgb(90, 90, 90);
+}
+
 .currentDate {
     background-color: #4F8BF9;
     color: #FFFFFF;
+    font-weight: bold;
 }
 
-.startNewEntryButton {
-    width: calc(100vw - 60px);
-    margin: 0 auto; /* Center horizontally */
-    padding: 10px;
-    background-color: #1F7A8C;
+.startNewEntryButton,
+.disabledEntryButton {
+    display: inline-block; /* Ensures Link behaves like a button */
+    width: calc(100vw - 60px); /* Set width to 80% of the viewport width */
+    padding: 12px;
     color: #FFFFFF;
     border: none;
     border-radius: 8px;
@@ -86,4 +97,51 @@
     font-weight: bold;
     text-align: center;
     text-decoration: none; /* Remove underline from Link */
+    position: absolute;
+    top: 20px; /* Adjust the position as needed */
+    left: 50%; /* Center the buttons horizontally */
+    transform: translateX(-50%);
+}
+
+.startNewEntryButton {
+    background-color: #1F7A8C;
+}
+
+.disabledEntryButton {
+    background-color: rgb(90, 90, 90);
+}
+
+.entryButtonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    position: relative; /* Ensure this container doesn't affect the fixed buttons */
+}
+
+.entryIcon {
+    font-size: 24px; /* Adjust size as needed */
+}
+
+.anger .entryIcon {
+    color: rgb(255, 80, 80); /* Passion is typically represented by red */
+}
+
+.fear .entryIcon {
+    color: rgb(255, 50, 255); /* Courage can be represented by a bright purple */
+}
+
+.sadness .entryIcon {
+    color: rgb(103, 103, 255); /* Melancholy with a calm, blue color */
+}
+
+.stress .entryIcon {
+    color: rgb(60, 255, 60); /* Resilience can be represented by a vibrant green */
+}
+
+.joy .entryIcon {
+    color: rgb(255, 225, 52); /* Joy is associated with a bright, cheerful color like gold */
+}
+
+.currentDate.hasEntry {
+    background-color: rgb(90, 90, 90); /* Grey out the cell if there's an entry for the current date */
 }

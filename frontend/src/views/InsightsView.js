@@ -1,14 +1,14 @@
 import InsightsNav from "../components/insights/InsightsNav";
 import InsightsPage from "../components/insights/InsightsPage";
-import styles from "../styles/insights/Insights.module.css"
+import styles from "../styles/insights/Insights.module.css";
 
-const InsightsView = () => {
+const InsightsView = ({ weeklyMoodCounts }) => {
     return (
         <div>
             <InsightsNav />
             <div className={styles.content}>
                 <div className={styles.transcContainer}>
-                    <InsightsPage />
+                    <InsightsPage weeklyMoodCounts={weeklyMoodCounts} />
                 </div>
             </div>
         </div>

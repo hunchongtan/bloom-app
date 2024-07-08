@@ -1,0 +1,48 @@
+.screen {
+    width: 100%;
+    height: 100vh;
+    background-image: url(../../assets/login-bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    text-align: center; /* Center align text */
+}
+
+.screen input {
+    background: none;
+    border: 1px solid #fff;
+    width: calc(90vw - 2rem); /* Adjust width to account for padding */
+    margin: 12px 0;
+    color: #ffffff;
+    padding: 1rem;
+    box-sizing: border-box;
+    font-size: 1rem;
+    border-radius: 4px;
+    outline: none; /* Remove default focus outline */
+}
+
+.loginButton {
+    background: var(--primary); /* Assuming --primary is defined elsewhere */
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    width: calc(90vw - 2rem); /* Adjust width to account for padding */
+    margin: 12px 0;
+    padding: 0.8rem;
+    box-sizing: border-box;
+    font-size: 1rem;
+    cursor: pointer; /* Add cursor pointer on hover */
+    outline: none; /* Remove default focus outline */
+}
+
+.loginButton:hover {
+    opacity: 0.9; /* Reduce opacity on hover */
+}
+
+.loginButton:active {
+    opacity: 0.8; /* Further reduce opacity when button is active */
+}
