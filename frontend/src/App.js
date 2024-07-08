@@ -7,6 +7,7 @@ import HomeView from './views/HomeView';
 import InsightsView from './views/InsightsView';
 import SettingsView from './views/SettingsView';
 import Entry from './components/home/Entry';
+import NewEntry from './views/NewEntry';
 
 function Navigation() {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ function App() {
           <Route path="/insights" element={<InsightsView />} />
           <Route path="/settings" element={<SettingsView />} />
           <Route path="/entry" element={<Entry />} />
+          <Route path="/newentry" element={<NewEntry />} />
         </Routes>
         <Navigation />
       </BrowserRouter>
