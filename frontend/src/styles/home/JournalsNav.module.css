@@ -32,5 +32,6 @@
 
 .homeText {
     margin: 0; /* Provide a value for margin */
-    font-size: 1rem; /* Adjust size as needed */
+    font-size: 0.9rem; /* Adjust size as needed */
+    color:rgb(211, 211, 211)
 }

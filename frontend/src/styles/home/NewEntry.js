@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/home/NewEntry.css';
-import JournalsNav from "../components/home/JournalsNav";
-import { MdArrowForwardIos } from "react-icons/md";
+import JournalsNav from "../../components/home/JournalsNav";
+import { MdArrowForwardIos, MdArrowBackIos  } from "react-icons/md";
+import DateTimeHeader from '../../components/home/DateTimeHeader';
 
 
 
@@ -51,12 +52,15 @@ const NewEntry = () => {
   return (
     <div className="NewEntry">
       <div className="chat-header">
-        <button className="back-button" onClick={handleBackClick}>{"<"}</button>
+        <button className="back-button" onClick={handleBackClick}>
+          <MdArrowBackIos />
+          </button>
         <div className="header-content">
           <JournalsNav />
         </div>
       </div>
       <div className="chat-window">
+      <DateTimeHeader />
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender === 'bot' ? 'bot' : 'user'}`}>
             {message.text}

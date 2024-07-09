@@ -7,7 +7,7 @@ import HomeView from './views/HomeView';
 import InsightsView from './views/InsightsView';
 import SettingsView from './views/SettingsView';
 import Entry from './components/home/Entry';
-import NewEntry from './views/NewEntry';
+import NewEntry from './styles/home/NewEntry';
 
 function Navigation() {
   const navigate = useNavigate();
