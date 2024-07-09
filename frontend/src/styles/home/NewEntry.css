@@ -1,4 +1,24 @@
 /* src/Chatbot.css */
+
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  color: #1F7A8C;
+}
+
+.nav-button:hover {
+  color: #1F7A8C;
+}
+
 .NewEntry {
     display: flex;
     flex-direction: column;
@@ -52,14 +72,15 @@
     border-radius: 20px;
     max-width: 60%;
     display: inline-block;
+    word-wrap: break-word;
   }
   
   .message.user {
     align-self: flex-end;
-    background: #007bff;
+    background: #1F7A8C;
     color: #fff;
     margin-left: auto; 
-    text-align: right;
+    text-align: left;
   }
   
   .message.bot {
