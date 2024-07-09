@@ -37,7 +37,7 @@ const Calendar = ({ userId, setWeeklyMoodCounts }) => {
                     case 'sadness':
                         weeks['currentWeek'].Melancholy++;
                         break;
-                    case 'stress':
+                    case 'anticipation':
                         weeks['currentWeek'].Resilience++;
                         break;
                     case 'joy':
@@ -56,13 +56,22 @@ const Calendar = ({ userId, setWeeklyMoodCounts }) => {
     useEffect(() => {
         const fetchEntries = async () => {
             try {
-                const data = [
-                    { "chat_id": 11, "user_id": 4, "date": "2024-06-18", "mood": "anger" },
-                    { "chat_id": 12, "user_id": 4, "date": "2024-06-19", "mood": "fear" },
-                    { "chat_id": 13, "user_id": 4, "date": "2024-06-21", "mood": "joy" },
-                    { "chat_id": 14, "user_id": 4, "date": "2024-07-07", "mood": "joy" },
-                    { "chat_id": 15, "user_id": 4, "date": "2024-07-08", "mood": "anger" },
-                ];
+                const user_id = localStorage.getItem('userId'); // Retrieve user ID from localStorage
+                console.log('Retrieved user ID:', user_id); // Log the user ID
+
+                const response = await fetch(`/chats/${user_id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                console.log('Retrieved JSON data:', data); // Log the retrieved JSON data
 
                 setEntries(data);
                 calculateWeeklyMoodCounts(data);
@@ -122,8 +131,8 @@ const Calendar = ({ userId, setWeeklyMoodCounts }) => {
             const date = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const isPastDate = new Date(currentYear, currentMonth, day) < today;
             const isCurrentDate = isCurrentMonth && day === today.getDate();
-            const hasEntry = entries.some(entry => entry.date === date);
-            const entry = entries.find(entry => entry.date === date);
+            const hasEntry = entries.some(entry => entry.date === date && entry.mood !== 'neutral');
+            const entry = entries.find(entry => entry.date === date && entry.mood !== 'neutral');
             const cellClass = isCurrentDate ? `${styles.calendarCell} ${styles.currentDate}` : styles.calendarCell;
             const entryClass = hasEntry ? `${cellClass} ${styles.hasEntry}` : cellClass;
             const moodClass = entry ? styles[entry.mood.toLowerCase()] : '';
@@ -176,7 +185,7 @@ const Calendar = ({ userId, setWeeklyMoodCounts }) => {
         setCurrentYear(currentDate.getFullYear());
     };
 
-    const hasEntryToday = entries.some(entry => entry.date === `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`);
+    const hasEntryToday = entries.some(entry => entry.date === `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}` && entry.mood !== 'neutral');
     const isCurrentMonth = currentMonth === new Date().getMonth() && currentYear === new Date().getFullYear();
 
     return (

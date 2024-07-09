@@ -3,7 +3,7 @@ import styles from '../../styles/settings/SettingsPage.module.css';
 
 const SettingsPage = ({ userId }) => {
     const name = localStorage.getItem('name'); // Retrieve the user's name from localStorage
-    const [profileImage, setProfileImage] = useState(localStorage.getItem('profileImage') || 'https://via.placeholder.com/150');
+    const [profileImage, setProfileImage] = useState(localStorage.getItem('profileImage') || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y&s=150');
 
     const handleLogout = () => {
         localStorage.removeItem('name');

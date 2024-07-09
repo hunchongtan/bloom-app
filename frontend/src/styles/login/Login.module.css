@@ -46,3 +46,9 @@
 .loginButton:active {
     opacity: 0.8; /* Further reduce opacity when button is active */
 }
+
+.loginButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+

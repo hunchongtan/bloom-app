@@ -1,46 +1,57 @@
-.settingsPage {
+.screen {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 20px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
-.profileContainer {
+.content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+    width: 100%;
 }
 
-.profileImage {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
+.transcContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+}
+
+.flowerImage {
+    width: 70vw;
+    height: 250px;
     object-fit: cover;
     margin-bottom: 10px;
 }
 
-.username {
+.flowerTitle {
     font-size: 1.5rem;
     font-weight: bold;
+    color: #333;
     margin-bottom: 10px;
 }
 
-.uploadButton {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.logoutButton {
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
+.writeup {
     font-size: 1rem;
+    line-height: 1.5;
+    color: #666;
+    text-align: center;
+    white-space: pre-wrap; /* Preserve line breaks */
 }
 
-.logoutButton:hover {
-    background-color: darkred;
+.writeup b {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
