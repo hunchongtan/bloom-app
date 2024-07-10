@@ -7,6 +7,7 @@ import InsightsView from './views/InsightsView';
 import SettingsView from './views/SettingsView';
 import LoginView from './views/LoginView';
 import Entry from './components/home/Entry';
+import NewEntry from './components/home/newentry/NewEntry';
 import './App.css';
 
 function Navigation() {
@@ -60,8 +61,9 @@ function App() {
         <Route path="/insights" element={<InsightsView weeklyMoodCounts={weeklyMoodCounts} />} />
         <Route path="/settings" element={<SettingsView />} />
         <Route path="/entry" element={<Entry />} />
+        <Route path="/entry/new" element={<NewEntry />} /> {/* Added New Entry route */}
       </Routes>
-      {location.pathname !== '/' && <Navigation />}
+      {location.pathname !== '/' && location.pathname !== '/entry/new' && <Navigation />}
     </div>
   );
 }
