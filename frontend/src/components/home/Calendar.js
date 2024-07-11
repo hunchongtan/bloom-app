@@ -146,8 +146,8 @@ const Calendar = ({ userId, setWeeklyMoodCounts }) => {
                 <div
                     key={day}
                     className={`${entryClass} ${moodClass} ${textColor}`}
-                    onClick={hasEntry ? () => handleCellClick(date, isCurrentDate) : null}
-                    style={hasEntry ? { cursor: 'pointer' } : {}}
+                    onClick={() => handleCellClick(date, isCurrentDate)}
+                    style={hasEntry || isCurrentDate ? { cursor: 'pointer' } : {}}
                 >
                     {hasEntry ? <FilterVintage className={`${styles.entryIcon} ${moodClass}`} /> : day}
                 </div>

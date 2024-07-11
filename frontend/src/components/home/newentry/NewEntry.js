@@ -206,11 +206,6 @@ const NewEntry = () => {
     setInput('');
   };
 
-  const clearMessages = () => {
-    setMessages([{ text: botMessages[0].text, sender: 'bot' }]);
-    setCanSendMessage(true); // Enable buttons again
-  };
-
   return (
     <div>
       <JournalsNav />
