@@ -61,7 +61,7 @@ function App() {
         <Route path="/insights" element={<InsightsView weeklyMoodCounts={weeklyMoodCounts} />} />
         <Route path="/settings" element={<SettingsView />} />
         <Route path="/entry" element={<Entry />} />
-        <Route path="/entry/new" element={<NewEntry />} /> {/* Added New Entry route */}
+        <Route path="/entry/new" element={<NewEntry />} />
       </Routes>
       {location.pathname !== '/' && location.pathname !== '/entry/new' && <Navigation />}
     </div>

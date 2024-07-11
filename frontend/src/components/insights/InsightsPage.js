@@ -90,7 +90,7 @@ const InsightsPageView = ({ weeklyMoodCounts }) => {
             return acc;
         }, {});
 
-        if (Object.values(moodCounts).every(count => count === 0)) {
+        if (Object.values(moodCounts).every(count => count <= 3)) {
             return 'Seedling';
         }
 

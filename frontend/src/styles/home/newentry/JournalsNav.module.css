@@ -1,0 +1,101 @@
+:root {
+    --background-dark: #171C1E; /* Dark background color */
+    --text-light: #ffffff;      /* Light text color */
+}
+
+.navContainer {
+    position: relative;
+    width: 100%;
+    background: var(--background-dark);
+    z-index: 99;
+    :root {
+    --background-dark: #171C1E; /* Dark background color */
+    --text-light: #ffffff;      /* Light text color */
+}
+
+.navContainer {
+    position: relative;
+    width: 100%;
+    background: var(--background-dark);
+    z-index: 99;
+}
+
+.main {
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; /* Change flex direction to column */
+    align-items: center;
+    position: relative;
+    color: var(--text-light); /* Set light text color */
+}
+
+.backButton {
+    position: absolute;
+    left: 2rem; /* Adjust the value to your preference */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-light);
+    font-size: 1.5rem; /* Adjust size as needed */
+    z-index: 1000; /* Ensure the back button is on top */
+}
+
+.logoContainer {
+    display: flex;
+    flex-direction: column; /* Change flex direction to column */
+    align-items: center;
+    text-align: center;
+}
+
+.logoContainer img {
+    filter: invert(1); /* Invert the color to white */
+}
+
+.homeText {
+    margin: 0; /* Provide a value for margin */
+    font-size: 1rem; /* Adjust size as needed */
+    color: var(--text-light); /* Ensure the text is light */
+}
+
+}
+
+.main {
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; /* Change flex direction to column */
+    align-items: center;
+    position: relative;
+    color: var(--text-light); /* Set light text color */
+}
+
+.backButton {
+    position: absolute;
+    left: 2rem; /* Adjust the value to your preference */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-light);
+    font-size: 1.5rem; /* Adjust size as needed */
+    z-index: 1000; /* Ensure the back button is on top */
+}
+
+.logoContainer {
+    display: flex;
+    flex-direction: column; /* Change flex direction to column */
+    align-items: center;
+    text-align: center;
+}
+
+.logoContainer img {
+    filter: invert(1); /* Invert the color to white */
+}
+
+.homeText {
+    margin: 0; /* Provide a value for margin */
+    font-size: 1rem; /* Adjust size as needed */
+    color: var(--text-light); /* Ensure the text is light */
+}

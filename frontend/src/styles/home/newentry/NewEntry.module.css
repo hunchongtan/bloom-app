@@ -1,0 +1,126 @@
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.navButton {
+  background: none;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  color: #1F7A8C;
+}
+
+.navButton:hover {
+  color: #1F7A8C;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 200px);
+  margin: 0 1.2rem;
+  padding: 1rem 0;
+  overflow: scroll;
+}
+
+.transcContainer {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.chatWindow {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  margin: 10px 0;
+  padding: 10px 15px;
+  border-radius: 20px;
+  max-width: 60%;
+  display: inline-block;
+  word-wrap: break-word;
+}
+
+.messageUser {
+  align-self: flex-end;
+  background: #1F7A8C;
+  color: #fff;
+  margin-left: auto;
+  text-align: left;
+}
+
+.messageBot {
+  align-self: flex-start;
+  background: #e1e1e1;
+  color: #000;
+  margin-right: auto;
+  text-align: left;
+}
+
+.inputForm {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  background: #fff;
+  margin-bottom: 10px;
+}
+
+.inputFormInput {
+  flex: 1;
+  padding: 10px;
+  border-style: solid;
+  border-radius: 20px;
+  margin: 0 10px;
+  background: #f1f1f1;
+}
+
+.inputFormButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #1F7A8C;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 1rem;
+  border-radius: 5px;
+  z-index: 1000;
+  text-align: center;
+}
+
+.disabledTextBox {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.disabledText {
+  color: white;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+}
