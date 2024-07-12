@@ -14,6 +14,8 @@ const LoginView = () => {
             setError(null);
             setMessage('');
     
+            console.log('Submitting login form with username:', username);
+    
             // First, check if the username exists
             let response = await fetch(`/users/${username}`, {
                 method: 'GET',
@@ -22,10 +24,16 @@ const LoginView = () => {
                 },
             });
     
+            console.log('GET /users response:', response);
+
             if (response.ok) {
                 const data = await response.json();
+                console.log('GET /users data:', data);
+
                 if (data.user_id) {
                     // Username exists, retrieve the user_id
+                    console.log('User found:', data);
+
                     localStorage.setItem('userId', data.user_id.toString());
                     localStorage.setItem('name', data.name.toString());
                     setMessage('User found. Authorising...');
@@ -34,6 +42,8 @@ const LoginView = () => {
                     }, 3000); // Delay for 3 seconds
                     return;
                 }
+            } else {
+                console.log('GET /users failed:', response.status, response.statusText);
             }
     
             // If the username doesn't exist, create a new user
@@ -46,7 +56,9 @@ const LoginView = () => {
                     name: username,
                 }),
             });
-    
+
+            console.log('POST /users response:', response);
+
             // Check if the response is OK (status code 200-299)
             if (!response.ok) {
                 // Try to parse the error message
@@ -56,10 +68,13 @@ const LoginView = () => {
                 } catch {
                     errorText = await response.text();
                 }
+                console.log('POST /users error:', errorText);
                 throw new Error(errorText || 'Login failed');
             }
     
             const data = await response.json();
+            console.log('POST /users data:', data);
+
             const { user_id, name } = data;
     
             // Store the user_id in localStorage or sessionStorage for use in your app
