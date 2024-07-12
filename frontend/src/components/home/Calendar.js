@@ -111,10 +111,10 @@ const Calendar = ({ userId, setWeeklyMoodCounts }) => {
         return new Date(year, month, 1).getDay();
     };
 
-    const handleCellClick = (date, isCurrentDate) => {
+    const handleCellClick = (date, isCurrentDate, hasEntry) => {
         if (isCurrentDate) {
             navigate('/entry/new');
-        } else {
+        } else if (hasEntry) {
             navigate(`/entry/${date}`);
         }
     };
@@ -146,8 +146,8 @@ const Calendar = ({ userId, setWeeklyMoodCounts }) => {
                 <div
                     key={day}
                     className={`${entryClass} ${moodClass} ${textColor}`}
-                    onClick={() => handleCellClick(date, isCurrentDate)}
-                    style={hasEntry || isCurrentDate ? { cursor: 'pointer' } : {}}
+                    onClick={() => handleCellClick(date, isCurrentDate, hasEntry)}
+                    style={(hasEntry || isCurrentDate) ? { cursor: 'pointer' } : {}}
                 >
                     {hasEntry ? <FilterVintage className={`${styles.entryIcon} ${moodClass}`} /> : day}
                 </div>

@@ -6,8 +6,8 @@ import HomeView from './views/HomeView';
 import InsightsView from './views/InsightsView';
 import SettingsView from './views/SettingsView';
 import LoginView from './views/LoginView';
-import Entry from './components/home/Entry';
 import NewEntry from './components/home/newentry/NewEntry';
+import EntryView from './components/home/entry/Entry';
 import './App.css';
 
 function Navigation() {
@@ -60,8 +60,8 @@ function App() {
         <Route path="/home" element={<HomeView setWeeklyMoodCounts={setWeeklyMoodCounts} />} />
         <Route path="/insights" element={<InsightsView weeklyMoodCounts={weeklyMoodCounts} />} />
         <Route path="/settings" element={<SettingsView />} />
-        <Route path="/entry" element={<Entry />} />
         <Route path="/entry/new" element={<NewEntry />} />
+        <Route path="/entry/:date" element={<EntryView />} /> {/* Add this route */}
       </Routes>
       {location.pathname !== '/' && location.pathname !== '/entry/new' && <Navigation />}
     </div>

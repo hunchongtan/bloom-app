@@ -10,6 +10,7 @@ const NewEntry = () => {
   const [input, setInput] = useState('');
   const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(0);
   const [canSendMessage, setCanSendMessage] = useState(false); // Initially, buttons are disabled
+  const [showPopup, setShowPopup] = useState(false);
 
   const userId = localStorage.getItem('userId'); // Retrieve user ID from localStorage
 
@@ -21,9 +22,10 @@ const NewEntry = () => {
       console.log('Fetched chats:', chats);
 
       const today = new Date().toISOString().split('T')[0];
-      const todayChat = chats && chats.length > 0 ? chats.find(chat => new Date(chat.date).toISOString().split('T')[0] === today) : null;
+      const todayChat = chats.find(chat => new Date(chat.date).toISOString().split('T')[0] === today);
 
       if (todayChat) {
+        console.log('Found today\'s chat:', todayChat);
         const chatMessages = await fetchMessages(todayChat.chat_id);
         console.log('Fetched today\'s messages:', chatMessages);
 
@@ -34,9 +36,24 @@ const NewEntry = () => {
           setCanSendMessage(true); // Enable buttons if no messages are sent today
         }
 
-        const fetchedMessages = chatMessages.map(message => ({ text: message.content, sender: message.role.toLowerCase(), date: message.date }));
+        const userMessages = chatMessages.filter(message => message.role.toLowerCase() === 'user');
+        const llmMessages = chatMessages.filter(message => message.role.toLowerCase() === 'llm');
+
+        const uniqueUserMessages = userMessages.length > 0 ? [userMessages[0]] : [];
+        const fetchedMessages = [
+          ...uniqueUserMessages.map(message => ({ text: message.content, sender: 'user', date: message.date })),
+          ...llmMessages.map(message => ({ text: message.content, sender: 'llm', date: message.date }))
+        ];
+        
         setMessages([{ text: botMessages[0].text, sender: 'bot' }, ...fetchedMessages]);
+
+        if (canSendMessage) {
+          setShowPopup(false); // Hide popup if messages can be sent
+        } else {
+          setShowPopup(true); // Show popup if messages cannot be sent
+        }
       } else {
+        console.log('No chat found for today.');
         setCanSendMessage(true); // Enable buttons if no chat for today
       }
     };
@@ -46,6 +63,7 @@ const NewEntry = () => {
 
   const fetchChats = async (userId) => {
     try {
+      console.log(`Fetching chats for user ID: ${userId}`);
       const response = await fetch(`/chats/${userId}`, {
         method: 'GET',
         headers: {
@@ -58,7 +76,8 @@ const NewEntry = () => {
       }
 
       const data = await response.json();
-      return data.chats || [];
+      console.log('Fetched chats data:', data);
+      return data || [];
     } catch (error) {
       console.error('Error fetching chats:', error);
       return [];
@@ -67,6 +86,7 @@ const NewEntry = () => {
 
   const fetchMessages = async (chatId) => {
     try {
+      console.log(`Fetching messages for chat ID: ${chatId}`);
       const response = await fetch(`/messages/${chatId}`, {
         method: 'GET',
         headers: {
@@ -79,7 +99,8 @@ const NewEntry = () => {
       }
 
       const messages = await response.json();
-      return messages;
+      console.log('Fetched messages data:', messages);
+      return messages || [];
     } catch (error) {
       console.error('Error fetching messages:', error);
       return [];
@@ -87,6 +108,7 @@ const NewEntry = () => {
   };
 
   const checkIfMessageSentToday = (messages) => {
+    console.log('Checking if message sent today with messages:', messages);
     if (messages.length > 0) {
       return true;
     }
@@ -95,6 +117,7 @@ const NewEntry = () => {
 
   const createChat = async (userId) => {
     try {
+      console.log(`Creating chat for user ID: ${userId}`);
       const response = await fetch('/chats/', {
         method: 'POST',
         headers: {
@@ -109,7 +132,7 @@ const NewEntry = () => {
       }
 
       const newChat = await response.json();
-      console.log('Created chat:', newChat); // Add log
+      console.log('Created chat:', newChat);
       return newChat;
     } catch (error) {
       console.error('Error creating chat:', error);
@@ -178,6 +201,7 @@ const NewEntry = () => {
 
       // Disable buttons after sending message
       setCanSendMessage(false);
+      setShowPopup(true); // Show popup after sending message
 
       // Send the user message to langchain
       await fetch('/langchain/', {
@@ -233,11 +257,14 @@ const NewEntry = () => {
         </div>
       </div>
       <form onSubmit={handleSubmit} className={styles.inputForm}>
-        {!canSendMessage &&
-          <div className={styles.disabledTextBox}>
-            <div className={styles.disabledText}>Thank you for reflecting with us today. Join us again tomorrow!</div>
+        {showPopup && (
+          <div className={styles.popup}>
+            <div className={styles.disabledText}>
+              Thank you for reflecting with us today. Join us again tomorrow!
+            </div>
+            <button className={styles.closeButton} onClick={() => setShowPopup(false)}>X</button>
           </div>
-        }
+        )}
         <input
           type="text"
           value={input}
