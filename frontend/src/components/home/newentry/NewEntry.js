@@ -51,8 +51,8 @@ const NewEntry = () => {
         const prompt = getPromptMessage();
         setMessages([{ text: prompt, sender: 'bot' }, ...fetchedMessages]);
 
-        if (!canSend) {
-          console.log('Setting showPopup to true');
+        if (!canSend && fetchedMessages.length >= 2) {
+          console.log('Setting showPopup to true during initialization');
           setShowPopup(true);
         }
       } else {
@@ -69,14 +69,6 @@ const NewEntry = () => {
 
     initialize();
   }, [userId, today, currentBotMessageIndex, getPromptMessage]);
-
-  useEffect(() => {
-    console.log('useEffect - canSendMessage:', canSendMessage, 'messages length:', messages.length, 'showPopup:', showPopup, 'initialized:', initialized);
-    if (initialized && !canSendMessage && messages.length > 0) {
-      console.log('Setting showPopup to true in useEffect');
-      setShowPopup(true);
-    }
-  }, [canSendMessage, messages, showPopup, initialized]);
 
   const fetchChats = async (userId) => {
     try {
@@ -243,6 +235,10 @@ const NewEntry = () => {
 
       if (!chatId) throw new Error('Failed to create or fetch chat ID');
 
+      // Post the prompt message before posting the user's message
+      const prompt = getPromptMessage();
+      await postPromptMessage(chatId, prompt);
+
       const payload = {
         content: input,
         role: 'User',
@@ -265,6 +261,10 @@ const NewEntry = () => {
 
         setCanSendMessage(false);
         setShowPopup(true);
+
+        if (messages.length >= 3) {
+          setShowPopup(true); // Only show popup if there are at least 3 messages
+        }
 
         const llmPayload = {
           content: input,
@@ -300,6 +300,11 @@ const NewEntry = () => {
     setInput('');
   };
 
+  const closePopup = () => {
+    setShowPopup(false);
+    setCanSendMessage(false); // Ensure the field and button remain disabled after closing the popup
+  };
+
   return (
     <div>
       <JournalsNav />
@@ -332,7 +337,7 @@ const NewEntry = () => {
             <div className={styles.disabledText}>
               Thank you for reflecting with us today. Join us again tomorrow!
             </div>
-            <button className={styles.closeButton} onClick={() => setShowPopup(false)}>X</button>
+            <button className={styles.closeButton} onClick={closePopup}>X</button>
           </div>
         )}
         <input
