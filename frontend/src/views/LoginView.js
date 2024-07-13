@@ -8,89 +8,68 @@ const LoginView = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
+
         try {
-            // Clear previous error messages
             setError(null);
             setMessage('');
-    
-            console.log('Submitting login form with username:', username);
-    
-            // First, check if the username exists
-            let response = await fetch(`/users/${username}`, {
+
+            const apiUrl = '/api'; // Use the proxy path
+            console.log(`Using API URL: ${apiUrl}`);
+
+            // Fetch the user
+            let response = await fetch(`${apiUrl}/users/${username}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-    
-            console.log('GET /users response:', response);
 
-            if (response.ok) {
+            if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
                 const data = await response.json();
-                console.log('GET /users data:', data);
-
                 if (data.user_id) {
-                    // Username exists, retrieve the user_id
-                    console.log('User found:', data);
-
                     localStorage.setItem('userId', data.user_id.toString());
                     localStorage.setItem('name', data.name.toString());
                     setMessage('User found. Authorising...');
                     setTimeout(() => {
                         window.location.replace('/home');
-                    }, 3000); // Delay for 3 seconds
+                    }, 3000);
                     return;
                 }
             } else {
-                console.log('GET /users failed:', response.status, response.statusText);
+                console.error('User not found, creating a new user...');
             }
-    
-            // If the username doesn't exist, create a new user
-            response = await fetch('/users/', {
+
+            // If user not found, create a new user
+            console.log('Creating new user...');
+            response = await fetch(`${apiUrl}/users/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    name: username,
-                }),
+                body: JSON.stringify({ name: username }),
             });
 
-            console.log('POST /users response:', response);
+            if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
+                const data = await response.json();
+                const { user_id, name } = data;
+                localStorage.setItem('userId', user_id.toString());
+                localStorage.setItem('name', name.toString());
 
-            // Check if the response is OK (status code 200-299)
-            if (!response.ok) {
-                // Try to parse the error message
-                let errorText;
-                try {
-                    errorText = await response.json();
-                } catch {
-                    errorText = await response.text();
-                }
-                console.log('POST /users error:', errorText);
+                setMessage('User created. Authorising...');
+                setTimeout(() => {
+                    window.location.replace('/home');
+                }, 3000);
+            } else {
+                const errorText = await response.text();
+                console.error('Error creating user response text:', errorText);
                 throw new Error(errorText || 'Login failed');
             }
-    
-            const data = await response.json();
-            console.log('POST /users data:', data);
 
-            const { user_id, name } = data;
-    
-            // Store the user_id in localStorage or sessionStorage for use in your app
-            localStorage.setItem('userId', user_id.toString());
-            localStorage.setItem('name', name.toString());
-    
-            setMessage('User created. Authorising...');
-            setTimeout(() => {
-                window.location.replace('/home');
-            }, 3000); // Delay for 3 seconds
-            
         } catch (error) {
             console.error('Error logging in:', error.message);
             setError(error.message);
         }
-    };      
+    };
 
     return (
         <div className={styles.screen}>
@@ -104,12 +83,12 @@ const LoginView = () => {
                     value={username} 
                     onChange={e => setUsername(e.target.value)} 
                     placeholder="Username" 
-                    autoComplete="username" // Added autocomplete attribute
+                    autoComplete="username"
                 />
                 <button 
                     type="submit" 
                     className={styles.loginButton} 
-                    disabled={!username.trim()} // Disable button if username is empty
+                    disabled={!username.trim()}
                 >
                     LOG IN
                 </button>

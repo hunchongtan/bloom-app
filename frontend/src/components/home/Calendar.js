@@ -59,22 +59,30 @@ const Calendar = ({ userId, setWeeklyMoodCounts }) => {
                 const user_id = localStorage.getItem('userId'); // Retrieve user ID from localStorage
                 console.log('Retrieved user ID:', user_id); // Log the user ID
 
-                const response = await fetch(`/chats/${user_id}`, {
+                const apiUrl = '/api'; // Use the proxy path
+                console.log(`Using API URL: ${apiUrl}`);
+
+                const response = await fetch(`${apiUrl}/chats/${user_id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 });
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
+                if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
+                    const data = await response.json();
+                    console.log('Retrieved JSON data:', data); // Log the retrieved JSON data
+
+                    setEntries(data);
+                    calculateWeeklyMoodCounts(data);
+                } else {
+                    const errorText = await response.text();
+                    console.error('Error response text:', errorText);
+                    throw new Error('Invalid JSON response');
                 }
-
-                const data = await response.json();
-                console.log('Retrieved JSON data:', data); // Log the retrieved JSON data
-
-                setEntries(data);
-                calculateWeeklyMoodCounts(data);
             } catch (error) {
                 console.error('Error fetching entries:', error);
             }

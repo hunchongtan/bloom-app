@@ -1,6 +1,28 @@
 [
-    { "text": "What is one fascinating thing you saw today?" },
-    { "text": "Tell me about a challenge you overcame recently." },
-    { "text": "What is something new you learned this week?" }
-  ]
+  {
+      "date": "2024-07-13",
+      "prompts": [
+          { "text": "What is one fascinating thing you saw today?" },
+          { "text": "Tell me about a challenge you overcame recently." },
+          { "text": "What is something new you learned this week?" }
+      ]
+  },
+  {
+      "date": "2024-07-14",
+      "prompts": [
+          { "text": "What is one interesting conversation you had today?" },
+          { "text": "Describe a recent accomplishment you're proud of." },
+          { "text": "What is a new skill you practiced this week?" }
+      ]
+  },
+  {
+      "date": "2024-07-15",
+      "prompts": [
+          { "text": "What is one memorable moment from today?" },
+          { "text": "What is a problem you solved recently?" },
+          { "text": "What is something surprising you discovered this week?" }
+      ]
+  }
+]
+
   
