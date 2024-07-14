@@ -29,24 +29,29 @@ const Calendar = ({ userId, setWeeklyMoodCounts }) => {
             if (entryDate >= startOfWeek && entryDate <= today) {
                 switch (entry.mood) {
                     case 'anger':
+                    case 'Anger':
                         weeks['currentWeek'].Passion++;
                         break;
                     case 'fear':
+                    case 'Fear':
                         weeks['currentWeek'].Courage++;
                         break;
                     case 'sadness':
+                    case 'Sadness':
                         weeks['currentWeek'].Melancholy++;
                         break;
                     case 'anticipation':
+                    case 'Anticipation':
                         weeks['currentWeek'].Resilience++;
                         break;
                     case 'joy':
+                    case 'Joy':
                         weeks['currentWeek'].Joy++;
                         break;
                     default:
                         break;
                 }
-            }
+            }            
         });
 
         console.log('Weekly mood counts:', weeks);

@@ -80,14 +80,32 @@ const InsightsPageView = ({ weeklyMoodCounts }) => {
             return acc;
         }, {});
 
-        if (Object.values(moodCounts).every(count => count <= 2)) {
+        // Debugging log to see the counts
+        console.log('Mood Counts:', moodCounts);
+
+        // Sum all mood counts
+        const totalMoodCount = Object.values(moodCounts).reduce((sum, count) => sum + count, 0);
+
+        // If total mood count is less than or equal to 3, return 'Seedling'
+        if (totalMoodCount <= 3) {
             return 'Seedling';
         }
 
+        // Define the mood hierarchy
         const moodHierarchy = ['Joy', 'Passion', 'Courage', 'Resilience', 'Melancholy'];
-        const sortedMoods = moodHierarchy.filter(mood => moodCounts[mood] > 0);
 
-        return sortedMoods.length > 0 ? sortedMoods[0] : 'Seedling';
+        // Find the highest count among the moods
+        let dominantMood = 'Seedling';
+        let highestCount = 0;
+
+        moodHierarchy.forEach(mood => {
+            if (moodCounts[mood] > highestCount) {
+                highestCount = moodCounts[mood];
+                dominantMood = mood;
+            }
+        });
+
+        return dominantMood;
     };
 
     const mood = getDominantMood();
@@ -107,4 +125,3 @@ const InsightsPageView = ({ weeklyMoodCounts }) => {
 };
 
 export default InsightsPageView;
-

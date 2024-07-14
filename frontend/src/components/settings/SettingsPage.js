@@ -6,9 +6,7 @@ const SettingsPage = ({ userId }) => {
     const [profileImage, setProfileImage] = useState(localStorage.getItem('profileImage') || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y&s=150');
 
     const handleLogout = () => {
-        localStorage.removeItem('name');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('profileImage');
+        localStorage.clear();
         window.location.replace('/');
     };
 
