@@ -1,28 +1,74 @@
 [
-  {
-      "date": "2024-07-13",
-      "prompts": [
-          { "text": "What is one fascinating thing you saw today?" },
-          { "text": "Tell me about a challenge you overcame recently." },
-          { "text": "What is something new you learned this week?" }
-      ]
-  },
-  {
-      "date": "2024-07-14",
-      "prompts": [
-          { "text": "What is one interesting conversation you had today?" },
-          { "text": "Describe a recent accomplishment you're proud of." },
-          { "text": "What is a new skill you practiced this week?" }
-      ]
-  },
-  {
-      "date": "2024-07-15",
-      "prompts": [
-          { "text": "What is one memorable moment from today?" },
-          { "text": "What is a problem you solved recently?" },
-          { "text": "What is something surprising you discovered this week?" }
-      ]
-  }
+    {
+        "date": "2024-07-13",
+        "prompts": [
+            { "text": "Hi! What's a piece of advice you received recently?" },
+            { "text": "Hi! What's a new idea or project you're excited about?" },
+            { "text": "Hey! Who did you talk to today and what did you discuss?" }
+        ]
+    },
+    {
+        "date": "2024-07-14",
+        "prompts": [
+            { "text": "Hi! What's a memory that always makes you happy?" },
+            { "text": "Hello! What's one thing you'd like to improve about today?" },
+            { "text": "Hey! What did you have for lunch or dinner?" }
+        ]
+    },
+    {
+        "date": "2024-07-15",
+        "prompts": [
+            { "text": "Hey! What's something you're curious about right now?" },
+            { "text": "Hi! What's something you accomplished today?" },
+            { "text": "Hi! What's the best part of your morning routine?" }
+        ]
+    },
+    {
+        "date": "2024-07-16",
+        "prompts": [
+            { "text": "Hi there! What's a goal you're working towards?" },
+            { "text": "Hey! What's something you're curious about right now?" },
+            { "text": "Hey! Any plans for the weekend?" }
+        ]
+    },
+    {
+        "date": "2024-07-17",
+        "prompts": [
+            { "text": "Hello! What's a challenge you overcame recently?" },
+            { "text": "Hello! What's one thing you'd like to learn this month?" },
+            { "text": "Hello! What's your favorite way to relax?" }
+        ]
+    },
+    {
+        "date": "2024-07-18",
+        "prompts": [
+            { "text": "Hey! What's a goal you achieved recently?" },
+            { "text": "Hi! What's something that inspired you today?" },
+            { "text": "Hey! What's a hobby you enjoy?" }
+        ]
+    },
+    {
+        "date": "2024-07-19",
+        "prompts": [
+            { "text": "Hi! What's something you're passionate about?" },
+            { "text": "Hello! What's a skill you'd like to develop?" },
+            { "text": "Hi! What's your favorite way to spend your free time?" }
+        ]
+    },
+    {
+        "date": "2024-07-20",
+        "prompts": [
+            { "text": "Hey there! What's a favorite memory from childhood?" },
+            { "text": "Hi! What's something you did today that made you proud?" },
+            { "text": "Hello! What's your favorite way to stay active?" }
+        ]
+    },
+    {
+        "date": "2024-07-21",
+        "prompts": [
+            { "text": "Hello! What's a new habit you're trying to build?" },
+            { "text": "Hey! What's a quote that resonates with you right now?" },
+            { "text": "Hello! What's something that made you laugh today?" }
+        ]
+    }
 ]
-
-  
