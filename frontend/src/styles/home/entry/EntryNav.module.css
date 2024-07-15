@@ -13,13 +13,6 @@
     --text-light: #ffffff;      /* Light text color */
 }
 
-.navContainer {
-    position: relative;
-    width: 100%;
-    background: var(--background-dark);
-    z-index: 99;
-}
-
 .main {
     width: 100%;
     padding: 1rem;
