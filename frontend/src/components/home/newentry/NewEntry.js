@@ -12,6 +12,7 @@ const NewEntry = () => {
   const [canSendMessage, setCanSendMessage] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const [chatCreated, setChatCreated] = useState(false);
 
   const userId = localStorage.getItem('userId');
   const today = new Date().toISOString().split('T')[0];
@@ -27,7 +28,8 @@ const NewEntry = () => {
       const chats = await fetchChats(userId);
       console.log('Fetched chats:', chats);
 
-      const todayChat = chats.find(chat => new Date(chat.date).toISOString().split('T')[0] === today);
+      const todayChats = chats.filter(chat => new Date(chat.date).toISOString().split('T')[0] === today);
+      const todayChat = todayChats.length > 0 ? todayChats[0] : undefined; // Use the first chat of the day
       console.log('Today\'s chat:', todayChat);
 
       if (todayChat) {
@@ -56,19 +58,22 @@ const NewEntry = () => {
           setShowPopup(true);
         }
       } else {
-        console.log('No chat found for today.');
-        setCanSendMessage(true);
-        const newChat = await createChat(userId);
-        if (newChat) {
-          const prompt = getPromptMessage();
-          setMessages([{ text: prompt, sender: 'bot' }]);
+        if (!chatCreated) {
+          console.log('No chat found for today. Creating a new chat...');
+          const newChat = await createChat(userId);
+          if (newChat) {
+            const prompt = getPromptMessage();
+            setMessages([{ text: prompt, sender: 'bot' }]);
+            setChatCreated(true);
+          }
         }
+        setCanSendMessage(true);
       }
       setInitialized(true);
     };
 
     initialize();
-  }, [userId, today, currentBotMessageIndex, getPromptMessage]);
+  }, [userId, today, currentBotMessageIndex, getPromptMessage, chatCreated]);
 
   const fetchChats = async (userId) => {
     try {
@@ -164,7 +169,7 @@ const NewEntry = () => {
 
   const checkIfMessageSentToday = (messages) => {
     console.log('Checking if message sent today with messages:', messages);
-    return messages.length > 0;
+    return messages.some(message => message.role.toLowerCase() === 'user');
   };
 
   const createChat = async (userId) => {
@@ -262,10 +267,6 @@ const NewEntry = () => {
         setCanSendMessage(false);
         setShowPopup(true);
 
-        if (messages.length >= 3) {
-          setShowPopup(true); // Only show popup if there are at least 3 messages
-        }
-
         const llmPayload = {
           content: input,
           role: 'LLM',
@@ -281,7 +282,7 @@ const NewEntry = () => {
         });
 
         const chatMessages = await fetchMessages(chatId);
-        const llmMessages = chatMessages.filter(message => message.role === 'LLM');
+        const llmMessages = chatMessages.filter(message => message.role.toLowerCase() === 'llm');
 
         if (llmMessages.length > 0) {
           const llmMessage = llmMessages[llmMessages.length - 1];
@@ -302,7 +303,6 @@ const NewEntry = () => {
 
   const closePopup = () => {
     setShowPopup(false);
-    setCanSendMessage(false); // Ensure the field and button remain disabled after closing the popup
   };
 
   return (
