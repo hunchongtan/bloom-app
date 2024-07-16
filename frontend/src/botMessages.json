@@ -18,17 +18,17 @@
     {
         "date": "2024-07-15",
         "prompts": [
-            { "text": "Hey! What's something you're curious about right now?" },
-            { "text": "Hi! What's something you accomplished today?" },
-            { "text": "Hi! What's the best part of your morning routine?" }
+            { "text": "What is one happy thing that happened today?" },
+            { "text": "Share with me about an important memory." },
+            { "text": "What is the best part of your morning routine?" }
         ]
     },
     {
         "date": "2024-07-16",
         "prompts": [
-            { "text": "Hi there! What's a goal you're working towards?" },
-            { "text": "Hey! What's something you're curious about right now?" },
-            { "text": "Hey! Any plans for the weekend?" }
+            { "text": "Hello! What is something that happened recently that you regret and that you wish you had done things differently?" },
+            { "text": "Hi! What is something that happened today that you are grateful for and why?" },
+            { "text": "Hey! What is a goal that you have been working on and what are some steps that you have taken towards them recently?" }
         ]
     },
     {
