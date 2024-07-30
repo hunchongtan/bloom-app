@@ -13,6 +13,7 @@ const NewEntry = () => {
   const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(
     localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0
   );
+  const [messages, setMessages] = useState([]);
 
   const userId = localStorage.getItem('userId');
   const today = new Date().toISOString().split('T')[0];
@@ -44,13 +45,25 @@ const NewEntry = () => {
 
         setCanSendMessage(canSend);
         setShowPopup(!canSend); // Show popup if a message has already been sent
+
+        const userMessages = chatMessages.filter(message => message.role.toLowerCase() === 'user');
+        const llmMessages = chatMessages.filter(message => message.role.toLowerCase() === 'llm');
+
+        const uniqueUserMessages = userMessages.length > 0 ? [userMessages[0]] : [];
+        const fetchedMessages = [
+          ...uniqueUserMessages.map(message => ({ text: message.content, sender: 'user', date: message.date })),
+          ...llmMessages.map(message => ({ text: message.content, sender: 'llm', date: message.date }))
+        ];
+
+        const prompt = getPromptMessages();
+        setMessages([{ text: prompt[currentBotMessageIndex], sender: 'bot' }, ...fetchedMessages]);
       } else {
         setCanSendMessage(true);
       }
     };
 
     initialize();
-  }, [userId, today]);
+  }, [userId, today, currentBotMessageIndex]);
 
   const fetchChats = async (userId) => {
     try {
@@ -213,6 +226,9 @@ const NewEntry = () => {
         setCanSendMessage(false);
         setShowPopup(true);
 
+        // Update messages state to include the new user message
+        setMessages(prevMessages => [...prevMessages, { text: input, sender: 'user' }]);
+
         // Post to LLM endpoint
         const llmPayload = {
           content: input,
@@ -234,6 +250,7 @@ const NewEntry = () => {
         if (llmMessages.length > 0) {
           const llmMessage = llmMessages[llmMessages.length - 1];
           console.log('LLM message added:', llmMessage);
+          setMessages(prevMessages => [...prevMessages, { text: llmMessage.content, sender: 'llm' }]);
         }
       } else {
         const errorText = await response.text();
@@ -267,14 +284,13 @@ const NewEntry = () => {
 
   return (
     <div>
-      <JournalsNav />
       <div className={styles.content}>
-        <div className={styles.transcContainer}>
+      <JournalsNav />
+        <div className={styles.newEntryInputForm}>
           <DateTimeHeader />
           <div className={styles.botMessageContainer}>
             <h1>Your Daily Reflection</h1>
-            <p>Here is your prompt for today: </p>
-            <p>{promptMessages[currentBotMessageIndex]}</p>
+            <p>Here is your prompt for today: <br /> {promptMessages[currentBotMessageIndex]}</p>
             <div className={styles.navigation}>
               <button onClick={handlePrevMessage} className={styles.navButton} disabled={promptMessages.length <= 1}>
                 <MdArrowBackIos style={{ marginTop: '5px' }} />
@@ -285,29 +301,49 @@ const NewEntry = () => {
               </button>
             </div>
           </div>
+          
+          {showPopup && (
+            <div className={styles.popup}>
+              <div className={styles.disabledText}>
+                Thank you for reflecting with us today. Join us again tomorrow!
+              </div>
+              <button className={styles.closeButton} onClick={closePopup}>X</button>
+            </div>
+          )}
+          
+          {!showPopup && canSendMessage && (
+            <textarea
+              className={styles.noteInput}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Start writing..."
+              disabled={!canSendMessage}
+            />
+          )}
+
+          <div className={styles.messagesContainer}>
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`${styles.message} ${message.sender === 'user' ? styles.messageUser : styles.messageBot}`}
+              >
+                {message.text}
+              </div>
+            ))}
+          </div>
+  
+          {!showPopup && canSendMessage && (
+            <button
+              type="button"
+              className={styles.submitButton}
+              onClick={handleSubmit}
+              disabled={!canSendMessage}
+            >
+              Save
+            </button>
+          )}
         </div>
       </div>
-      <form onSubmit={handleSubmit} className={styles.inputForm}>
-        {showPopup && (
-          <div className={styles.popup}>
-            <div className={styles.disabledText}>
-              Thank you for reflecting with us today. Join us again tomorrow!
-            </div>
-            <button className={styles.closeButton} onClick={closePopup}>X</button>
-          </div>
-        )}
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Your entry here"
-          className={styles.inputFormInput}
-          disabled={!canSendMessage}
-        />
-        <button type="submit" className={styles.inputFormButton} disabled={!canSendMessage}>
-          <MdArrowForwardIos />
-        </button>
-      </form>
     </div>
   );
 };
