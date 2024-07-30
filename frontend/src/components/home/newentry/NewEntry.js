@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../../../styles/home/newentry/NewEntry.module.css';
 import JournalsNav from "./JournalsNav";
-import { MdArrowForwardIos } from "react-icons/md";
+import { MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
 import DateTimeHeader from './DateTimeHeader';
 import botMessages from '../../../botMessages.json';
 
@@ -9,16 +9,18 @@ const NewEntry = () => {
   const [input, setInput] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [canSendMessage, setCanSendMessage] = useState(false);
-  const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0);
-  const [promptMessage, setPromptMessage] = useState('');
+  const [promptMessages, setPromptMessages] = useState([]);
+  const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(
+    localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0
+  );
 
   const userId = localStorage.getItem('userId');
   const today = new Date().toISOString().split('T')[0];
 
-  const getPromptMessage = useCallback(async () => {
-    const prompts = await fetchPrompt(today);
-    return prompts[currentBotMessageIndex].text;
-  }, [currentBotMessageIndex, today]);
+  const getPromptMessages = () => {
+    const prompts = botMessages.find(message => message.date === today)?.prompts || [];
+    return prompts.map(prompt => prompt.text) || ['No prompt available for today.'];
+  };
 
   useEffect(() => {
     const initialize = async () => {
@@ -30,8 +32,8 @@ const NewEntry = () => {
       const todayChat = todayChats.length > 0 ? todayChats[0] : undefined; // Use the first chat of the day
       console.log('Today\'s chat:', todayChat);
 
-      const prompt = await getPromptMessage();
-      setPromptMessage(prompt);
+      const prompts = getPromptMessages();
+      setPromptMessages(prompts);
 
       if (todayChat) {
         const chatMessages = await fetchMessages(todayChat.chat_id);
@@ -41,7 +43,6 @@ const NewEntry = () => {
         console.log('Can send message today:', canSend);
 
         setCanSendMessage(canSend);
-        
         setShowPopup(!canSend); // Show popup if a message has already been sent
       } else {
         setCanSendMessage(true);
@@ -49,7 +50,7 @@ const NewEntry = () => {
     };
 
     initialize();
-  }, [userId, today, getPromptMessage]);
+  }, [userId, today]);
 
   const fetchChats = async (userId) => {
     try {
@@ -101,30 +102,6 @@ const NewEntry = () => {
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
-      return [];
-    }
-  };
-
-  const fetchPrompt = async (date) => {
-    try {
-      const response = await fetch('/api/prompts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ date })
-      });
-
-      if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
-        const data = await response.json();
-        return data.prompts || [];
-      } else {
-        const errorText = await response.text();
-        console.error('Error response text:', errorText);
-        throw new Error('Invalid JSON response for prompts');
-      }
-    } catch (error) {
-      console.error('Error fetching prompt:', error);
       return [];
     }
   };
@@ -212,7 +189,7 @@ const NewEntry = () => {
       if (!chatId) throw new Error('Failed to create or fetch chat ID');
 
       // Post the prompt message before posting the user's message
-      await postPromptMessage(chatId, promptMessage);
+      await postPromptMessage(chatId, promptMessages[currentBotMessageIndex]);
 
       const payload = {
         content: input,
@@ -274,6 +251,20 @@ const NewEntry = () => {
     setShowPopup(false);
   };
 
+  const handleNextMessage = () => {
+    console.log('Handling next message');
+    const nextIndex = (currentBotMessageIndex + 1) % promptMessages.length;
+    setCurrentBotMessageIndex(nextIndex);
+    localStorage.setItem('currentBotMessageIndex', nextIndex);
+  };
+
+  const handlePrevMessage = () => {
+    console.log('Handling previous message');
+    const prevIndex = (currentBotMessageIndex - 1 + promptMessages.length) % promptMessages.length;
+    setCurrentBotMessageIndex(prevIndex);
+    localStorage.setItem('currentBotMessageIndex', prevIndex);
+  };
+
   return (
     <div>
       <JournalsNav />
@@ -282,7 +273,17 @@ const NewEntry = () => {
           <DateTimeHeader />
           <div className={styles.botMessageContainer}>
             <h1>Your Daily Reflection</h1>
-            <p>Here is your prompt for today: {promptMessage}</p>
+            <p>Here is your prompt for today: </p>
+            <p>{promptMessages[currentBotMessageIndex]}</p>
+            <div className={styles.navigation}>
+              <button onClick={handlePrevMessage} className={styles.navButton} disabled={promptMessages.length <= 1}>
+                <MdArrowBackIos style={{ marginTop: '5px' }} />
+              </button>
+              <span>{`${currentBotMessageIndex + 1}/${promptMessages.length}`}</span>
+              <button onClick={handleNextMessage} className={styles.navButton} disabled={promptMessages.length <= 1}>
+                <MdArrowForwardIos style={{ marginTop: '5px' }} />
+              </button>
+            </div>
           </div>
         </div>
       </div>
