@@ -1,24 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from '../../../styles/home/newentry/NewEntry.module.css';
 import JournalsNav from "./JournalsNav";
-import { MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
+import { MdArrowForwardIos } from "react-icons/md";
 import DateTimeHeader from './DateTimeHeader';
 import botMessages from '../../../botMessages.json';
 
 const NewEntry = () => {
-  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0);
-  const [canSendMessage, setCanSendMessage] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [initialized, setInitialized] = useState(false);
-  const [chatCreated, setChatCreated] = useState(false);
+  const [canSendMessage, setCanSendMessage] = useState(false);
+  const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0);
+  const [promptMessage, setPromptMessage] = useState('');
 
   const userId = localStorage.getItem('userId');
   const today = new Date().toISOString().split('T')[0];
 
-  const getPromptMessage = useCallback(() => {
-    const prompts = fetchPrompt(today);
+  const getPromptMessage = useCallback(async () => {
+    const prompts = await fetchPrompt(today);
     return prompts[currentBotMessageIndex].text;
   }, [currentBotMessageIndex, today]);
 
@@ -32,48 +30,26 @@ const NewEntry = () => {
       const todayChat = todayChats.length > 0 ? todayChats[0] : undefined; // Use the first chat of the day
       console.log('Today\'s chat:', todayChat);
 
+      const prompt = await getPromptMessage();
+      setPromptMessage(prompt);
+
       if (todayChat) {
         const chatMessages = await fetchMessages(todayChat.chat_id);
         console.log('Fetched today\'s messages:', chatMessages);
 
-        const canSend = checkIfMessageSentToday(chatMessages);
+        const canSend = !checkIfMessageSentToday(chatMessages);
         console.log('Can send message today:', canSend);
 
-        setCanSendMessage(!canSend);
-
-        const userMessages = chatMessages.filter(message => message.role.toLowerCase() === 'user');
-        const llmMessages = chatMessages.filter(message => message.role.toLowerCase() === 'llm');
-
-        const uniqueUserMessages = userMessages.length > 0 ? [userMessages[0]] : [];
-        const fetchedMessages = [
-          ...uniqueUserMessages.map(message => ({ text: message.content, sender: 'user', date: message.date })),
-          ...llmMessages.map(message => ({ text: message.content, sender: 'llm', date: message.date }))
-        ];
-
-        const prompt = getPromptMessage();
-        setMessages([{ text: prompt, sender: 'bot' }, ...fetchedMessages]);
-
-        if (!canSend && fetchedMessages.length >= 2) {
-          console.log('Setting showPopup to true during initialization');
-          setShowPopup(true);
-        }
+        setCanSendMessage(canSend);
+        
+        setShowPopup(!canSend); // Show popup if a message has already been sent
       } else {
-        if (!chatCreated) {
-          console.log('No chat found for today. Creating a new chat...');
-          const newChat = await createChat(userId);
-          if (newChat) {
-            const prompt = getPromptMessage();
-            setMessages([{ text: prompt, sender: 'bot' }]);
-            setChatCreated(true);
-          }
-        }
         setCanSendMessage(true);
       }
-      setInitialized(true);
     };
 
     initialize();
-  }, [userId, today, currentBotMessageIndex, getPromptMessage, chatCreated]);
+  }, [userId, today, getPromptMessage]);
 
   const fetchChats = async (userId) => {
     try {
@@ -129,9 +105,28 @@ const NewEntry = () => {
     }
   };
 
-  const fetchPrompt = (date) => {
-    const botMessage = botMessages.find(message => message.date === date);
-    return botMessage ? botMessage.prompts : [];
+  const fetchPrompt = async (date) => {
+    try {
+      const response = await fetch('/api/prompts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ date })
+      });
+
+      if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
+        const data = await response.json();
+        return data.prompts || [];
+      } else {
+        const errorText = await response.text();
+        console.error('Error response text:', errorText);
+        throw new Error('Invalid JSON response for prompts');
+      }
+    } catch (error) {
+      console.error('Error fetching prompt:', error);
+      return [];
+    }
   };
 
   const postPromptMessage = async (chatId, prompt) => {
@@ -201,36 +196,12 @@ const NewEntry = () => {
     }
   };
 
-  const handleNextMessage = () => {
-    console.log('Handling next message');
-    const nextIndex = (currentBotMessageIndex + 1) % 3;
-    setCurrentBotMessageIndex(nextIndex);
-    localStorage.setItem('currentBotMessageIndex', nextIndex);
-
-    const prompt = getPromptMessage();
-    setMessages([{ text: prompt, sender: 'bot' }]);
-    setShowPopup(false); // Ensure popup does not show when navigating prompts
-  };
-
-  const handlePrevMessage = () => {
-    console.log('Handling previous message');
-    const prevIndex = (currentBotMessageIndex - 1 + 3) % 3;
-    setCurrentBotMessageIndex(prevIndex);
-    localStorage.setItem('currentBotMessageIndex', prevIndex);
-
-    const prompt = getPromptMessage();
-    setMessages([{ text: prompt, sender: 'bot' }]);
-    setShowPopup(false); // Ensure popup does not show when navigating prompts
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (input.trim() === '') return;
 
-    const userMessage = { text: input, sender: 'user' };
-    setMessages([...messages, userMessage]);
-    console.log('User message added:', userMessage);
+    console.log('User input:', input);
 
     try {
       const todayChat = await fetchChats(userId).then(chats => 
@@ -241,8 +212,7 @@ const NewEntry = () => {
       if (!chatId) throw new Error('Failed to create or fetch chat ID');
 
       // Post the prompt message before posting the user's message
-      const prompt = getPromptMessage();
-      await postPromptMessage(chatId, prompt);
+      await postPromptMessage(chatId, promptMessage);
 
       const payload = {
         content: input,
@@ -263,10 +233,10 @@ const NewEntry = () => {
       if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
         await response.json();
         console.log('Message saved:', payload);
-
         setCanSendMessage(false);
         setShowPopup(true);
 
+        // Post to LLM endpoint
         const llmPayload = {
           content: input,
           role: 'LLM',
@@ -286,7 +256,6 @@ const NewEntry = () => {
 
         if (llmMessages.length > 0) {
           const llmMessage = llmMessages[llmMessages.length - 1];
-          setMessages(prevMessages => [...prevMessages, { text: llmMessage.content, sender: 'llm' }]);
           console.log('LLM message added:', llmMessage);
         }
       } else {
@@ -311,23 +280,9 @@ const NewEntry = () => {
       <div className={styles.content}>
         <div className={styles.transcContainer}>
           <DateTimeHeader />
-          <div className={styles.chatWindow}>
-            {messages.map((message, index) => (
-              <div key={index} className={`${styles.message} ${message.sender === 'bot' || message.sender === 'llm' ? styles.messageBot : styles.messageUser}`}>
-                {message.text}
-                {message.sender === 'bot' && (
-                  <div className={styles.navigation}>
-                    <button onClick={handlePrevMessage} className={styles.navButton} disabled={!canSendMessage}>
-                      <MdArrowBackIos style={{ marginTop: '5px' }} />
-                    </button>
-                    <span>{`${currentBotMessageIndex + 1}/3`}</span>
-                    <button onClick={handleNextMessage} className={styles.navButton} disabled={!canSendMessage}>
-                      <MdArrowForwardIos style={{ marginTop: '5px' }} />
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className={styles.botMessageContainer}>
+            <h1>Your Daily Reflection</h1>
+            <p>Here is your prompt for today: {promptMessage}</p>
           </div>
         </div>
       </div>
@@ -345,9 +300,8 @@ const NewEntry = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Your entry here"
-          disabled={!canSendMessage}
           className={styles.inputFormInput}
-          style={{ backgroundColor: !canSendMessage ? 'grey' : 'white' }}
+          disabled={!canSendMessage}
         />
         <button type="submit" className={styles.inputFormButton} disabled={!canSendMessage}>
           <MdArrowForwardIos />
