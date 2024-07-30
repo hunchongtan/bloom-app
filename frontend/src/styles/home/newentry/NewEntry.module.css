@@ -43,6 +43,25 @@
   margin-bottom: 20px; /* Add margin for spacing */
 }
 
+.messagesContainer {
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 100%; /* Adjust the max height */
+}
+
+.message {
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 10px;
+  white-space: pre-wrap; /* Allow wrapping within the container */
+  word-wrap: break-word; /* Break words as needed */
+}
+
+.messageBot {
+  background-color: #d1e7dd;
+  align-self: flex-end;
+}
+
 /* Textarea for note input */
 .noteInput {
   flex-grow: 1;
