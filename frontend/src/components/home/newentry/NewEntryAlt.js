@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../../../styles/home/newentry/NewEntryAlt.module.css';
-import JournalsNav from "./JournalsAltNav";
+import JournalsNav from "./JournalsNav";
 import { MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
 import DateTimeHeader from './DateTimeHeader';
 import botMessages from '../../../botMessages.json';
@@ -180,7 +180,7 @@ const NewEntry = () => {
 
     const taggedInput = `${input} [Notepad]`; // Append [Notepad] tag here
     const userMessage = { text: input, sender: 'user' }; // Keep the input without tag for display
-    setMessages([...messages, userMessage]);
+    setMessages(prevMessages => [...prevMessages, userMessage]); // Use function form of state setter
     console.log('User message added:', userMessage);
 
     try {
@@ -214,8 +214,6 @@ const NewEntry = () => {
         console.log('User message response:', responseData);
         setCanSendMessage(false);
         setShowPopup(true);
-
-        setMessages(prevMessages => [...prevMessages, { text: input, sender: 'user' }]); // Store the message without the tag for display
 
         localStorage.setItem('savedPromptIndex', currentBotMessageIndex);
       } else {
