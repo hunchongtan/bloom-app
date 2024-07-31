@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../../../styles/home/newentry/NewEntryAlt.module.css';
-import JournalsNav from "./JournalsNav";
+import JournalsNav from "./JournalsAltNav";
 import { MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
 import DateTimeHeader from './DateTimeHeader';
 import botMessages from '../../../botMessages.json';
