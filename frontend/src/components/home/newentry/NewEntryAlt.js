@@ -1,35 +1,36 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../../../styles/home/newentry/NewEntryAlt.module.css';
-import JournalsAltNav from "./JournalsAltNav";
+import JournalsNav from "./JournalsNav";
 import { MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
 import DateTimeHeader from './DateTimeHeader';
 import botMessages from '../../../botMessages.json';
 
-const NewEntryAlt = () => {
+const NewEntry = () => {
   const [input, setInput] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [canSendMessage, setCanSendMessage] = useState(false);
   const [promptMessages, setPromptMessages] = useState([]);
-  const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(
-    localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0
-  );
+  const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(0);
   const [messages, setMessages] = useState([]);
   const [todayChat, setTodayChat] = useState(null);
 
   const userId = localStorage.getItem('userId');
   const today = new Date().toISOString().split('T')[0];
 
-  const getPromptMessages = useCallback(() => {
+  const getPromptMessages = () => {
     const prompts = botMessages.find(message => message.date === today)?.prompts || [];
     return prompts.map(prompt => prompt.text) || ['No prompt available for today.'];
-  }, [today]);
+  };
 
   useEffect(() => {
     const initialize = async () => {
+      console.log('Initializing...');
       const chats = await fetchChats(userId);
+      console.log('Fetched chats:', chats);
 
       const todayChats = chats.filter(chat => new Date(chat.date).toISOString().split('T')[0] === today);
       const todayChat = todayChats.length > 0 ? todayChats[0] : undefined;
+      console.log("Today's chat:", todayChat);
 
       setTodayChat(todayChat);
 
@@ -38,21 +39,28 @@ const NewEntryAlt = () => {
 
       if (todayChat) {
         const chatMessages = await fetchMessages(todayChat.chat_id);
+        console.log("Today's messages:", chatMessages);
+
         const canSend = !checkIfMessageSentToday(chatMessages);
         setCanSendMessage(canSend);
         setShowPopup(!canSend); // Show popup if a message has already been sent
 
         const userMessages = chatMessages.filter(message => message.role.toLowerCase() === 'user');
-        const fetchedMessages = userMessages.map(message => ({ text: message.content, sender: 'user', date: message.date }));
+        const uniqueUserMessages = userMessages.length > 0 ? [userMessages[0]] : [];
+        const fetchedMessages = uniqueUserMessages.map(message => ({ text: message.content, sender: 'user', date: message.date }));
 
         setMessages(fetchedMessages); // Only setting user messages without the prompt
+        if (!canSend) {
+          const savedPromptIndex = parseInt(localStorage.getItem('savedPromptIndex')) || 0;
+          setCurrentBotMessageIndex(savedPromptIndex);
+        }
       } else {
         setCanSendMessage(true);
       }
     };
 
     initialize();
-  }, [userId, today, currentBotMessageIndex, getPromptMessages]);
+  }, [userId, today]);
 
   const fetchChats = async (userId) => {
     try {
@@ -107,6 +115,8 @@ const NewEntryAlt = () => {
 
     try {
       const apiUrl = '/api';
+      console.log('Posting prompt message payload:', payload);
+
       const response = await fetch(`${apiUrl}/messages/`, {
         method: 'POST',
         headers: {
@@ -116,14 +126,17 @@ const NewEntryAlt = () => {
       });
 
       if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
-        await response.json();
+        const responseData = await response.json();
+        console.log('Prompt message response:', responseData);
         return prompt;
       } else {
+        const errorText = await response.text();
+        console.error('Error response text:', errorText);
         throw new Error('Invalid JSON response for posting prompt message');
       }
     } catch (error) {
       console.error('Error posting prompt message:', error);
-      return prompt;
+      throw error;
     }
   };
 
@@ -135,6 +148,8 @@ const NewEntryAlt = () => {
     try {
       const apiUrl = '/api';
       const payload = { user_id: userId };
+      console.log('Creating chat with payload:', payload);
+
       const response = await fetch(`${apiUrl}/chats/`, {
         method: 'POST',
         headers: {
@@ -145,8 +160,11 @@ const NewEntryAlt = () => {
 
       if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
         const newChat = await response.json();
+        console.log('Created chat:', newChat);
         return newChat;
       } else {
+        const errorText = await response.text();
+        console.error('Error response text:', errorText);
         throw new Error('Invalid JSON response for creating chat');
       }
     } catch (error) {
@@ -160,6 +178,11 @@ const NewEntryAlt = () => {
 
     if (input.trim() === '') return;
 
+    const taggedInput = `${input} [Notepad]`; // Append [Notepad] tag here
+    const userMessage = { text: input, sender: 'user' }; // Keep the input without tag for display
+    setMessages([...messages, userMessage]);
+    console.log('User message added:', userMessage);
+
     try {
       const todayChat = await fetchChats(userId).then(chats => 
         chats.find(chat => new Date(chat.date).toISOString().split('T')[0] === today));
@@ -171,10 +194,11 @@ const NewEntryAlt = () => {
       await postPromptMessage(chatId, promptMessages[currentBotMessageIndex]);
 
       const payload = {
-        content: input,
+        content: taggedInput, // Append [Notepad] tag here
         role: 'User',
         chat_id: chatId
       };
+      console.log('Posting user message payload:', payload);
 
       const apiUrl = '/api';
       const response = await fetch(`${apiUrl}/messages/`, {
@@ -186,13 +210,18 @@ const NewEntryAlt = () => {
       });
 
       if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
-        await response.json();
+        const responseData = await response.json();
+        console.log('User message response:', responseData);
         setCanSendMessage(false);
         setShowPopup(true);
 
-        setMessages(prevMessages => [...prevMessages, { text: input, sender: 'user' }]);
+        setMessages(prevMessages => [...prevMessages, { text: input, sender: 'user' }]); // Store the message without the tag for display
+
+        localStorage.setItem('savedPromptIndex', currentBotMessageIndex);
       } else {
-        throw new Error('Invalid JSON response for saving message');
+        const errorText = await response.text();
+        console.error('Error response text:', errorText);
+        throw new Error('Invalid JSON response for saving user message');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -217,17 +246,23 @@ const NewEntryAlt = () => {
     localStorage.setItem('currentBotMessageIndex', prevIndex);
   };
 
+  const stripTag = (text) => {
+    return text.replace(' [Notepad]', '');
+  };
+
   return (
     <div>
       <div className={styles.content}>
-        <JournalsAltNav />
+        <JournalsNav />
         <div className={styles.newEntryInputForm}>
           <DateTimeHeader />
           <div className={styles.botMessageContainer}>
             <h1>Your Daily Reflection</h1>
             {!todayChat || canSendMessage ? (
               <p>Here is your prompt for today: <br /> {promptMessages[currentBotMessageIndex]}</p>
-            ) : null}
+            ) : (
+              <p>Here is your prompt for today: <br /> {promptMessages[parseInt(localStorage.getItem('savedPromptIndex'))]}</p>
+            )}
             <div className={styles.navigation}>
               <button onClick={handlePrevMessage} className={styles.navButton} disabled={promptMessages.length <= 1 || !canSendMessage}>
                 <MdArrowBackIos style={{ marginTop: '5px' }} />
@@ -262,9 +297,9 @@ const NewEntryAlt = () => {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`${styles.message} ${message.sender === 'user' ? styles.messageUser : ''}`}
+                className={`${styles.message} ${message.sender === 'user' ? styles.messageUser : styles.messageBot}`}
               >
-                {message.text}
+                {stripTag(message.text)}
               </div>
             ))}
           </div>
@@ -285,4 +320,4 @@ const NewEntryAlt = () => {
   );
 };
 
-export default NewEntryAlt;
+export default NewEntry;
