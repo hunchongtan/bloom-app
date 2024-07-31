@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from '../../../styles/home/newentry/NewEntryAlt.module.css';
 import JournalsNav from "./JournalsNav";
 import { MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
 import DateTimeHeader from './DateTimeHeader';
 import botMessages from '../../../botMessages.json';
 
-const NewEntry = () => {
+const NewEntryAlt = () => {
   const [input, setInput] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [canSendMessage, setCanSendMessage] = useState(false);
@@ -17,10 +17,10 @@ const NewEntry = () => {
   const userId = localStorage.getItem('userId');
   const today = new Date().toISOString().split('T')[0];
 
-  const getPromptMessages = () => {
+  const getPromptMessages = useCallback(() => {
     const prompts = botMessages.find(message => message.date === today)?.prompts || [];
     return prompts.map(prompt => prompt.text) || ['No prompt available for today.'];
-  };
+  }, [today]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -60,7 +60,7 @@ const NewEntry = () => {
     };
 
     initialize();
-  }, [userId, today]);
+  }, [userId, today, getPromptMessages]);
 
   const fetchChats = async (userId) => {
     try {
@@ -180,7 +180,7 @@ const NewEntry = () => {
 
     const taggedInput = `${input} [Notepad]`; // Append [Notepad] tag here
     const userMessage = { text: input, sender: 'user' }; // Keep the input without tag for display
-    setMessages([...messages, userMessage]);
+    setMessages(prevMessages => [...prevMessages, userMessage]); // Use function form of state setter
     console.log('User message added:', userMessage);
 
     try {
@@ -214,8 +214,6 @@ const NewEntry = () => {
         console.log('User message response:', responseData);
         setCanSendMessage(false);
         setShowPopup(true);
-
-        setMessages(prevMessages => [...prevMessages, { text: input, sender: 'user' }]); // Store the message without the tag for display
 
         localStorage.setItem('savedPromptIndex', currentBotMessageIndex);
       } else {
@@ -320,4 +318,4 @@ const NewEntry = () => {
   );
 };
 
-export default NewEntry;
+export default NewEntryAlt;
