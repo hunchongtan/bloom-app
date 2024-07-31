@@ -9,7 +9,7 @@ const JournalsNav = () => {
 
     const handleBackClick = () => {
         console.log("Back button clicked");
-        navigate('/home'); // Navigate to home page
+        navigate('/homeAlt'); // Navigate to home page
     };
 
     return (

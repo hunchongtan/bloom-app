@@ -57,7 +57,7 @@ const LoginView = () => {
 
                 setMessage('User created. Authorising...');
                 setTimeout(() => {
-                    window.location.replace('/home');
+                    window.location.replace('/homeAlt');
                 }, 3000);
             } else {
                 const errorText = await response.text();
