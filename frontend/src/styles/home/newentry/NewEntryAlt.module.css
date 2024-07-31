@@ -1,0 +1,137 @@
+/* Existing styles for navigation, buttons, and other elements */
+
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .navButton {
+    background: none;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    color: #1F7A8C;
+  }
+  
+  .navButton:hover {
+    color: #1F7A8C;
+  }
+  
+  .content {
+    /* display: flex; */
+    /* flex-direction: column; */
+    height:100vh;
+    margin: 0;
+    padding: 0;
+    /* overflow: hidden; */
+  }
+  
+  .newEntryInputForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height:75%;
+    align-items: stretch; /* Stretch to fill the width */
+    flex-grow: 1;
+    padding: 20px 20px 20px 20px; /* Add padding for better spacing */
+    box-sizing: border-box;
+  }
+  
+  .botMessageContainer {
+    margin-bottom: 20px; /* Add margin for spacing */
+  }
+  
+  .messagesContainer {
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 100%; /* Adjust the max height */
+  }
+  
+  .message {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 10px;
+    white-space: pre-wrap; /* Allow wrapping within the container */
+    word-wrap: break-word; /* Break words as needed */
+  }
+  
+  .messageBot {
+    background-color: #d1e7dd;
+    align-self: flex-end;
+  }
+  
+  /* Textarea for note input */
+  .noteInput {
+    flex-grow: 1;
+    background: none;
+    border: none;
+    color: #000;
+    padding: 20px;
+    resize: none;
+    outline: none;
+    height: 100%;
+    /* width: 100%; */
+    /*height: calc(100vh - 220px); Adjust height considering header, navigation, and submit button */
+    font-size: 1rem; /* Adjust font size as needed */
+    line-height: 1.5;
+  }
+  
+  .submitButton {
+    background-color: #1F7A8C;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    align-self: center; /* Center the button horizontally */
+    position: absolute;
+    bottom: 20px; /* Adjust position to have some space from the bottom */
+  }
+  
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    z-index: 1000;
+    text-align: center;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .disabledTextBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  .disabledText {
+    color: white;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+  }

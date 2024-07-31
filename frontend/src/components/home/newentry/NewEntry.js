@@ -28,7 +28,7 @@ const NewEntry = () => {
       console.log('Fetched chats:', chats);
 
       const todayChats = chats.filter(chat => new Date(chat.date).toISOString().split('T')[0] === today);
-      const todayChat = todayChats.length > 0 ? todayChats[0] : undefined; // Use the first chat of the day
+      const todayChat = todayChats.length > 0 ? todayChats[0] : undefined;
       console.log('Today\'s chat:', todayChat);
 
       if (todayChat) {
@@ -41,18 +41,15 @@ const NewEntry = () => {
         setCanSendMessage(!canSend);
 
         const userMessages = chatMessages.filter(message => message.role.toLowerCase() === 'user');
-        const llmMessages = chatMessages.filter(message => message.role.toLowerCase() === 'llm');
 
-        const uniqueUserMessages = userMessages.length > 0 ? [userMessages[0]] : [];
         const fetchedMessages = [
-          ...uniqueUserMessages.map(message => ({ text: message.content, sender: 'user', date: message.date })),
-          ...llmMessages.map(message => ({ text: message.content, sender: 'llm', date: message.date }))
+          ...userMessages.map(message => ({ text: message.content, sender: 'user', date: message.date }))
         ];
 
         const prompt = getPromptMessage();
         setMessages([{ text: prompt, sender: 'bot' }, ...fetchedMessages]);
 
-        if (!canSend && fetchedMessages.length >= 2) {
+        if (!canSend && fetchedMessages.length >= 1) {
           console.log('Setting showPopup to true during initialization');
           setShowPopup(true);
         }
@@ -132,39 +129,6 @@ const NewEntry = () => {
     return botMessage ? botMessage.prompts : [];
   };
 
-  const postPromptMessage = async (chatId, prompt) => {
-    const payload = {
-      content: prompt,
-      role: 'Bloom',
-      chat_id: chatId
-    };
-
-    try {
-      const apiUrl = '/api';
-      console.log('Posting prompt message:', payload);
-
-      const response = await fetch(`${apiUrl}/messages/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
-        await response.json();
-        return prompt;
-      } else {
-        const errorText = await response.text();
-        console.error('Error response text:', errorText);
-        throw new Error('Invalid JSON response for posting prompt message');
-      }
-    } catch (error) {
-      console.error('Error posting prompt message:', error);
-      return prompt;
-    }
-  };
-
   const checkIfMessageSentToday = (messages) => {
     console.log('Checking if message sent today with messages:', messages);
     return messages.some(message => message.role.toLowerCase() === 'user');
@@ -207,7 +171,7 @@ const NewEntry = () => {
 
     const prompt = getPromptMessage();
     setMessages([{ text: prompt, sender: 'bot' }]);
-    setShowPopup(false); // Ensure popup does not show when navigating prompts
+    setShowPopup(false);
   };
 
   const handlePrevMessage = () => {
@@ -218,7 +182,7 @@ const NewEntry = () => {
 
     const prompt = getPromptMessage();
     setMessages([{ text: prompt, sender: 'bot' }]);
-    setShowPopup(false); // Ensure popup does not show when navigating prompts
+    setShowPopup(false);
   };
 
   const handleSubmit = async (e) => {
@@ -237,10 +201,6 @@ const NewEntry = () => {
       const chatId = todayChat ? todayChat.chat_id : (await createChat(userId)).chat_id;
 
       if (!chatId) throw new Error('Failed to create or fetch chat ID');
-
-      // Post the prompt message before posting the user's message
-      const prompt = getPromptMessage();
-      await postPromptMessage(chatId, prompt);
 
       const payload = {
         content: input,
@@ -264,29 +224,6 @@ const NewEntry = () => {
 
         setCanSendMessage(false);
         setShowPopup(true);
-
-        const llmPayload = {
-          content: input,
-          role: 'LLM',
-          chat_id: chatId
-        };
-
-        await fetch(`${apiUrl}/langchain/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(llmPayload)
-        });
-
-        const chatMessages = await fetchMessages(chatId);
-        const llmMessages = chatMessages.filter(message => message.role.toLowerCase() === 'llm');
-
-        if (llmMessages.length > 0) {
-          const llmMessage = llmMessages[llmMessages.length - 1];
-          setMessages(prevMessages => [...prevMessages, { text: llmMessage.content, sender: 'llm' }]);
-          console.log('LLM message added:', llmMessage);
-        }
       } else {
         const errorText = await response.text();
         console.error('Error response text:', errorText);
@@ -311,7 +248,7 @@ const NewEntry = () => {
           <DateTimeHeader />
           <div className={styles.chatWindow}>
             {messages.map((message, index) => (
-              <div key={index} className={`${styles.message} ${message.sender === 'bot' || message.sender === 'llm' ? styles.messageBot : styles.messageUser}`}>
+              <div key={index} className={`${styles.message} ${message.sender === 'bot' ? styles.messageBot : styles.messageUser}`}>
                 {message.text}
                 {message.sender === 'bot' && (
                   <div className={styles.navigation}>

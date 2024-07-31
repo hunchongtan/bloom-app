@@ -3,11 +3,11 @@ import { BrowserRouter, Route, Routes, useNavigate, useLocation } from 'react-ro
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { LocalFlorist, Forest, SettingsSuggest } from '@mui/icons-material';
 import HomeView from './views/HomeView';
-import InsightsView from './views/InsightsView';
 import SettingsView from './views/SettingsView';
 import LoginView from './views/LoginView';
 import NewEntry from './components/home/newentry/NewEntry';
-import EntryView from './components/home/entry/Entry';
+import HomeAltView from './views/HomeAltView';
+import NewEntryAlt from './components/home/newentry/NewEntryAlt';
 import './App.css';
 
 function Navigation() {
@@ -20,7 +20,7 @@ function Navigation() {
         navigate("/home");
         break;
       case "insights":
-        navigate("/insights");
+        navigate("/home");
         break;
       case "settings":
         navigate("/settings");
@@ -47,7 +47,6 @@ function Navigation() {
 }
 
 function App() {
-  const [weeklyMoodCounts, setWeeklyMoodCounts] = useState([]);
   const location = useLocation();
 
   return (
@@ -57,13 +56,13 @@ function App() {
       </div>
       <Routes>
         <Route path='/' element={<LoginView />} />
-        <Route path="/home" element={<HomeView setWeeklyMoodCounts={setWeeklyMoodCounts} />} />
-        <Route path="/insights" element={<InsightsView weeklyMoodCounts={weeklyMoodCounts} />} />
+        <Route path="/home" element={<HomeView />} />
+        <Route path="/homeAlt" element={<HomeAltView />} />
         <Route path="/settings" element={<SettingsView />} />
         <Route path="/entry/new" element={<NewEntry />} />
-        <Route path="/entry/:date" element={<EntryView />} /> {/* Add this route */}
+        <Route path="/entryAlt/new" element={<NewEntryAlt />} />
       </Routes>
-      {location.pathname !== '/' && location.pathname !== '/entry/new' && <Navigation />}
+      {location.pathname !== '/' && location.pathname !== '/entry/new' && location.pathname !== '/entryAlt/new' && <Navigation />}
     </div>
   );
 }
@@ -77,4 +76,3 @@ function Root() {
 }
 
 export default Root;
-

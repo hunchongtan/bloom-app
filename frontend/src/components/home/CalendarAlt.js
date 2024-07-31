@@ -82,7 +82,7 @@ const Calendar = ({ userId }) => {
 
     const handleCellClick = (date, isCurrentDate, hasEntry) => {
         if (isCurrentDate) {
-            navigate('/entry/new');
+            navigate('/entryAlt/new');
         } else if (hasEntry) {
             navigate(`/entry/${date}`);
         }
