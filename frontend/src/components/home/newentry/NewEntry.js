@@ -11,7 +11,6 @@ const NewEntry = () => {
   const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0);
   const [canSendMessage, setCanSendMessage] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [initialized, setInitialized] = useState(false);
   const [chatCreated, setChatCreated] = useState(false);
 
   const userId = localStorage.getItem('userId');
@@ -69,7 +68,6 @@ const NewEntry = () => {
         }
         setCanSendMessage(true);
       }
-      setInitialized(true);
     };
 
     initialize();
