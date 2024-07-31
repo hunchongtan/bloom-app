@@ -14,6 +14,7 @@ const NewEntry = () => {
     localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0
   );
   const [messages, setMessages] = useState([]);
+  const [todayChat, setTodayChat] = useState(null);
 
   const userId = localStorage.getItem('userId');
   const today = new Date().toISOString().split('T')[0];
@@ -25,24 +26,19 @@ const NewEntry = () => {
 
   useEffect(() => {
     const initialize = async () => {
-      console.log('Initializing...');
       const chats = await fetchChats(userId);
-      console.log('Fetched chats:', chats);
 
       const todayChats = chats.filter(chat => new Date(chat.date).toISOString().split('T')[0] === today);
-      const todayChat = todayChats.length > 0 ? todayChats[0] : undefined; // Use the first chat of the day
-      console.log('Today\'s chat:', todayChat);
+      const todayChat = todayChats.length > 0 ? todayChats[0] : undefined;
+
+      setTodayChat(todayChat);
 
       const prompts = getPromptMessages();
       setPromptMessages(prompts);
 
       if (todayChat) {
         const chatMessages = await fetchMessages(todayChat.chat_id);
-        console.log('Fetched today\'s messages:', chatMessages);
-
         const canSend = !checkIfMessageSentToday(chatMessages);
-        console.log('Can send message today:', canSend);
-
         setCanSendMessage(canSend);
         setShowPopup(!canSend); // Show popup if a message has already been sent
 
@@ -55,8 +51,7 @@ const NewEntry = () => {
           ...llmMessages.map(message => ({ text: message.content, sender: 'llm', date: message.date }))
         ];
 
-        const prompt = getPromptMessages();
-        setMessages([{ text: prompt[currentBotMessageIndex], sender: 'bot' }, ...fetchedMessages]);
+        setMessages(fetchedMessages); // Only setting user and llm messages without the prompt
       } else {
         setCanSendMessage(true);
       }
@@ -68,8 +63,6 @@ const NewEntry = () => {
   const fetchChats = async (userId) => {
     try {
       const apiUrl = '/api';
-      console.log(`Fetching chats for user ID: ${userId} using API URL: ${apiUrl}`);
-
       const response = await fetch(`${apiUrl}/chats/${userId}`, {
         method: 'GET',
         headers: {
@@ -79,11 +72,8 @@ const NewEntry = () => {
 
       if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
         const data = await response.json();
-        console.log('Fetched chats data:', data);
         return data || [];
       } else {
-        const errorText = await response.text();
-        console.error('Error response text:', errorText);
         throw new Error('Invalid JSON response for chats');
       }
     } catch (error) {
@@ -95,8 +85,6 @@ const NewEntry = () => {
   const fetchMessages = async (chatId) => {
     try {
       const apiUrl = '/api';
-      console.log(`Fetching messages for chat ID: ${chatId} using API URL: ${apiUrl}`);
-
       const response = await fetch(`${apiUrl}/messages/${chatId}`, {
         method: 'GET',
         headers: {
@@ -106,11 +94,8 @@ const NewEntry = () => {
 
       if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
         const messages = await response.json();
-        console.log('Fetched messages data:', messages);
         return messages || [];
       } else {
-        const errorText = await response.text();
-        console.error('Error response text:', errorText);
         throw new Error('Invalid JSON response for messages');
       }
     } catch (error) {
@@ -128,8 +113,6 @@ const NewEntry = () => {
 
     try {
       const apiUrl = '/api';
-      console.log('Posting prompt message:', payload);
-
       const response = await fetch(`${apiUrl}/messages/`, {
         method: 'POST',
         headers: {
@@ -142,8 +125,6 @@ const NewEntry = () => {
         await response.json();
         return prompt;
       } else {
-        const errorText = await response.text();
-        console.error('Error response text:', errorText);
         throw new Error('Invalid JSON response for posting prompt message');
       }
     } catch (error) {
@@ -153,7 +134,6 @@ const NewEntry = () => {
   };
 
   const checkIfMessageSentToday = (messages) => {
-    console.log('Checking if message sent today with messages:', messages);
     return messages.some(message => message.role.toLowerCase() === 'user');
   };
 
@@ -161,8 +141,6 @@ const NewEntry = () => {
     try {
       const apiUrl = '/api';
       const payload = { user_id: userId };
-      console.log('Creating chat with payload:', payload);
-
       const response = await fetch(`${apiUrl}/chats/`, {
         method: 'POST',
         headers: {
@@ -173,11 +151,8 @@ const NewEntry = () => {
 
       if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
         const newChat = await response.json();
-        console.log('Created chat:', newChat);
         return newChat;
       } else {
-        const errorText = await response.text();
-        console.error('Error response text:', errorText);
         throw new Error('Invalid JSON response for creating chat');
       }
     } catch (error) {
@@ -191,8 +166,6 @@ const NewEntry = () => {
 
     if (input.trim() === '') return;
 
-    console.log('User input:', input);
-
     try {
       const todayChat = await fetchChats(userId).then(chats => 
         chats.find(chat => new Date(chat.date).toISOString().split('T')[0] === today));
@@ -201,7 +174,6 @@ const NewEntry = () => {
 
       if (!chatId) throw new Error('Failed to create or fetch chat ID');
 
-      // Post the prompt message before posting the user's message
       await postPromptMessage(chatId, promptMessages[currentBotMessageIndex]);
 
       const payload = {
@@ -209,7 +181,6 @@ const NewEntry = () => {
         role: 'User',
         chat_id: chatId
       };
-      console.log('Payload being sent:', payload);
 
       const apiUrl = '/api';
       const response = await fetch(`${apiUrl}/messages/`, {
@@ -222,14 +193,11 @@ const NewEntry = () => {
 
       if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
         await response.json();
-        console.log('Message saved:', payload);
         setCanSendMessage(false);
         setShowPopup(true);
 
-        // Update messages state to include the new user message
         setMessages(prevMessages => [...prevMessages, { text: input, sender: 'user' }]);
 
-        // Post to LLM endpoint
         const llmPayload = {
           content: input,
           role: 'LLM',
@@ -249,12 +217,9 @@ const NewEntry = () => {
 
         if (llmMessages.length > 0) {
           const llmMessage = llmMessages[llmMessages.length - 1];
-          console.log('LLM message added:', llmMessage);
           setMessages(prevMessages => [...prevMessages, { text: llmMessage.content, sender: 'llm' }]);
         }
       } else {
-        const errorText = await response.text();
-        console.error('Error response text:', errorText);
         throw new Error('Invalid JSON response for saving message');
       }
     } catch (error) {
@@ -269,14 +234,12 @@ const NewEntry = () => {
   };
 
   const handleNextMessage = () => {
-    console.log('Handling next message');
     const nextIndex = (currentBotMessageIndex + 1) % promptMessages.length;
     setCurrentBotMessageIndex(nextIndex);
     localStorage.setItem('currentBotMessageIndex', nextIndex);
   };
 
   const handlePrevMessage = () => {
-    console.log('Handling previous message');
     const prevIndex = (currentBotMessageIndex - 1 + promptMessages.length) % promptMessages.length;
     setCurrentBotMessageIndex(prevIndex);
     localStorage.setItem('currentBotMessageIndex', prevIndex);
@@ -285,23 +248,25 @@ const NewEntry = () => {
   return (
     <div>
       <div className={styles.content}>
-      <JournalsNav />
+        <JournalsNav />
         <div className={styles.newEntryInputForm}>
           <DateTimeHeader />
           <div className={styles.botMessageContainer}>
             <h1>Your Daily Reflection</h1>
-            <p>Here is your prompt for today: <br /> {promptMessages[currentBotMessageIndex]}</p>
+            {!todayChat || canSendMessage ? (
+              <p>Here is your prompt for today: <br /> {promptMessages[currentBotMessageIndex]}</p>
+            ) : null}
             <div className={styles.navigation}>
-              <button onClick={handlePrevMessage} className={styles.navButton} disabled={promptMessages.length <= 1}>
+              <button onClick={handlePrevMessage} className={styles.navButton} disabled={promptMessages.length <= 1 || !canSendMessage}>
                 <MdArrowBackIos style={{ marginTop: '5px' }} />
               </button>
               <span>{`${currentBotMessageIndex + 1}/${promptMessages.length}`}</span>
-              <button onClick={handleNextMessage} className={styles.navButton} disabled={promptMessages.length <= 1}>
+              <button onClick={handleNextMessage} className={styles.navButton} disabled={promptMessages.length <= 1 || !canSendMessage}>
                 <MdArrowForwardIos style={{ marginTop: '5px' }} />
               </button>
             </div>
           </div>
-          
+
           {showPopup && (
             <div className={styles.popup}>
               <div className={styles.disabledText}>
@@ -310,7 +275,7 @@ const NewEntry = () => {
               <button className={styles.closeButton} onClick={closePopup}>X</button>
             </div>
           )}
-          
+
           {!showPopup && canSendMessage && (
             <textarea
               className={styles.noteInput}
@@ -331,7 +296,7 @@ const NewEntry = () => {
               </div>
             ))}
           </div>
-  
+
           {!showPopup && canSendMessage && (
             <button
               type="button"
