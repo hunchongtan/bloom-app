@@ -187,28 +187,29 @@ const NewEntry = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (input.trim() === '') return;
-
-    const userMessage = { text: input, sender: 'user' };
+  
+    const taggedInput = `${input} [Chatbot]`; // Append [Chatbot] tag here
+    const userMessage = { text: input, sender: 'user' }; // Keep the input without tag for display
     setMessages([...messages, userMessage]);
     console.log('User message added:', userMessage);
-
+  
     try {
       const todayChat = await fetchChats(userId).then(chats => 
         chats.find(chat => new Date(chat.date).toISOString().split('T')[0] === today));
-
+  
       const chatId = todayChat ? todayChat.chat_id : (await createChat(userId)).chat_id;
-
+  
       if (!chatId) throw new Error('Failed to create or fetch chat ID');
-
+  
       const payload = {
-        content: input,
+        content: taggedInput, // Append [Chatbot] tag here
         role: 'User',
         chat_id: chatId
       };
       console.log('Payload being sent:', payload);
-
+  
       const apiUrl = '/api';
       const response = await fetch(`${apiUrl}/messages/`, {
         method: 'POST',
@@ -217,11 +218,11 @@ const NewEntry = () => {
         },
         body: JSON.stringify(payload)
       });
-
+  
       if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
         await response.json();
         console.log('Message saved:', payload);
-
+  
         setCanSendMessage(false);
         setShowPopup(true);
       } else {
@@ -232,8 +233,12 @@ const NewEntry = () => {
     } catch (error) {
       console.error('Error:', error);
     }
-
+  
     setInput('');
+  };
+  
+  const stripTag = (text) => {
+    return text.replace(' [Chatbot]', '');
   };
 
   const closePopup = () => {
@@ -249,7 +254,7 @@ const NewEntry = () => {
           <div className={styles.chatWindow}>
             {messages.map((message, index) => (
               <div key={index} className={`${styles.message} ${message.sender === 'bot' ? styles.messageBot : styles.messageUser}`}>
-                {message.text}
+                {stripTag(message.text)}
                 {message.sender === 'bot' && (
                   <div className={styles.navigation}>
                     <button onClick={handlePrevMessage} className={styles.navButton} disabled={!canSendMessage}>
