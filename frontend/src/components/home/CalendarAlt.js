@@ -186,7 +186,7 @@ const Calendar = ({ userId }) => {
                                     🔥 Check back tomorrow
                                 </div>
                             ) : (
-                                <Link to="/entry/new" className={styles.startNewEntryButton}>
+                                <Link to="/entryAlt/new" className={styles.startNewEntryButton}>
                                     🌱 Start new entry
                                 </Link>
                             )
