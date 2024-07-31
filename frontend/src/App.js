@@ -17,16 +17,16 @@ function Navigation() {
   const handleScreen = (screen) => {
     switch (screen) {
       case "home":
-        navigate("/home");
+        navigate("/homeAlt");
         break;
       case "insights":
-        navigate("/home");
+        navigate("/homeAlt");
         break;
       case "settings":
         navigate("/settings");
         break;
       default:
-        navigate("/home");
+        navigate("/homeAlt");
         break;
     }
     setScreen(screen);
