@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import styles from '../../styles/home/Calendar.module.css';
 
-const Calendar = ({ userId }) => {
+const CalendarAlt = ({ userId }) => {
     const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -84,7 +84,7 @@ const Calendar = ({ userId }) => {
         if (isCurrentDate) {
             navigate('/entryAlt/new');
         } else if (hasEntry) {
-            navigate(`/entry/${date}`);
+            navigate(`/entryAlt/${date}`);
         }
     };
 
@@ -198,4 +198,4 @@ const Calendar = ({ userId }) => {
     );
 };
 
-export default Calendar;
+export default CalendarAlt;
