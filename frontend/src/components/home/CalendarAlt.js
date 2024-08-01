@@ -95,6 +95,11 @@ const CalendarAlt = ({ userId }) => {
 
         const today = new Date();
         const isCurrentMonth = currentMonth === today.getMonth() && currentYear === today.getFullYear();
+        const canSendMessage = localStorage.getItem('canSendMessage') === 'true';
+
+        console.log('Current month:', currentMonth);
+        console.log('Current year:', currentYear);
+        console.log('Can send message:', canSendMessage);
 
         for (let i = 0; i < firstDayOfMonth; i++) {
             calendarDays.push(<div key={`empty${i}`} className={styles.calendarCell}></div>);
@@ -104,7 +109,7 @@ const CalendarAlt = ({ userId }) => {
             const date = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const isPastDate = new Date(currentYear, currentMonth, day) < today;
             const isCurrentDate = isCurrentMonth && day === today.getDate();
-            const hasEntry = entries.some(entry => entry.date === date);
+            const hasEntry = entries.some(entry => entry.date === date) || (isCurrentDate && !canSendMessage);
             const cellClass = isCurrentDate ? `${styles.calendarCell} ${styles.currentDate}` : styles.calendarCell;
             const entryClass = hasEntry ? `${cellClass} ${styles.hasEntry}` : cellClass;
             const textColor = isPastDate ? styles.pastDate : styles.futureDate;
@@ -156,7 +161,7 @@ const CalendarAlt = ({ userId }) => {
         setCurrentYear(currentDate.getFullYear());
     };
 
-    const hasEntryToday = entries.some(entry => entry.date === `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`);
+    const hasEntryToday = entries.some(entry => entry.date === `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`) || localStorage.getItem('canSendMessage') === 'false';
     const isCurrentMonth = currentMonth === new Date().getMonth() && currentYear === new Date().getFullYear();
 
     return (
