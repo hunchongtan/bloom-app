@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from '../../../styles/home/newentry/NewEntryAlt.module.css';
-import JournalsNav from "./JournalsNav";
+import JournalsAltNav from "./JournalsAltNav";
 import { MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
 import DateTimeHeader from './DateTimeHeader';
 import botMessages from '../../../botMessages.json';
@@ -8,7 +8,7 @@ import botMessages from '../../../botMessages.json';
 const NewEntryAlt = () => {
   const [input, setInput] = useState('');
   const [showPopup, setShowPopup] = useState(false);
-  const [canSendMessage, setCanSendMessage] = useState(false);
+  const [canSendMessage, setCanSendMessage] = useState(localStorage.getItem('canSendMessage') === 'true');
   const [promptMessages, setPromptMessages] = useState([]);
   const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(0);
   const [messages, setMessages] = useState([]);
@@ -41,25 +41,32 @@ const NewEntryAlt = () => {
         const chatMessages = await fetchMessages(todayChat.chat_id);
         console.log("Today's messages:", chatMessages);
 
-        const canSend = !checkIfMessageSentToday(chatMessages);
-        setCanSendMessage(canSend);
-        setShowPopup(!canSend); // Show popup if a message has already been sent
-
         const userMessages = chatMessages.filter(message => message.role.toLowerCase() === 'user');
         const uniqueUserMessages = userMessages.length > 0 ? [userMessages[0]] : [];
         const fetchedMessages = uniqueUserMessages.map(message => ({ text: message.content, sender: 'user', date: message.date }));
 
         setMessages(fetchedMessages); // Only setting user messages without the prompt
-        if (!canSend) {
-          const savedPromptIndex = parseInt(localStorage.getItem('savedPromptIndex')) || 0;
-          setCurrentBotMessageIndex(savedPromptIndex);
+
+        if (userMessages.length > 0) {
+          setShowPopup(true);
+          localStorage.setItem('canSendMessage', 'false');
+        } else {
+          setCanSendMessage(true);
         }
+
+        const savedPromptIndex = parseInt(localStorage.getItem('savedPromptIndex')) || 0;
+        setCurrentBotMessageIndex(savedPromptIndex);
       } else {
         setCanSendMessage(true);
+        localStorage.setItem('canSendMessage', 'true');
       }
     };
 
-    initialize();
+    if (localStorage.getItem('canSendMessage') === 'false') {
+      setShowPopup(true);
+    } else {
+      initialize();
+    }
   }, [userId, today, getPromptMessages]);
 
   const fetchChats = async (userId) => {
@@ -140,10 +147,6 @@ const NewEntryAlt = () => {
     }
   };
 
-  const checkIfMessageSentToday = (messages) => {
-    return messages.some(message => message.role.toLowerCase() === 'user');
-  };
-
   const createChat = async (userId) => {
     try {
       const apiUrl = '/api';
@@ -178,7 +181,7 @@ const NewEntryAlt = () => {
 
     if (input.trim() === '') return;
 
-    const taggedInput = `${input} [Notepad]`; // Append [Notepad] tag here
+    const taggedInput = `[Notepad] ${input}`; // Append [Notepad] tag here
     const userMessage = { text: input, sender: 'user' }; // Keep the input without tag for display
     setMessages(prevMessages => [...prevMessages, userMessage]); // Use function form of state setter
     console.log('User message added:', userMessage);
@@ -216,6 +219,7 @@ const NewEntryAlt = () => {
         setShowPopup(true);
 
         localStorage.setItem('savedPromptIndex', currentBotMessageIndex);
+        localStorage.setItem('canSendMessage', 'false'); // Set canSendMessage to false
       } else {
         const errorText = await response.text();
         console.error('Error response text:', errorText);
@@ -251,7 +255,7 @@ const NewEntryAlt = () => {
   return (
     <div>
       <div className={styles.content}>
-        <JournalsNav />
+        <JournalsAltNav />
         <div className={styles.newEntryInputForm}>
           <DateTimeHeader />
           <div className={styles.botMessageContainer}>

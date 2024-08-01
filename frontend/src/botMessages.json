@@ -12,55 +12,55 @@
         "prompts": [
             { "text": "Hi! What's a memory that always makes you happy?" },
             { "text": "Hello! What's one thing you'd like to improve about today?" },
-            { "text": "Hey! What did you have for lunch or dinner?" }
+            { "text": "What is something that has been making you stressed lately but you haven't told anyone about?" }
         ]
     },
     {
         "date": "2024-08-02",
         "prompts": [
-            { "text": "What is one happy thing that happened today?" },
-            { "text": "Share with me about an important memory." },
-            { "text": "What is the best part of your morning routine?" }
+            { "text": "Hi! What's a memory that always makes you happy?" },
+            { "text": "Hello! What's one thing you'd like to improve about today?" },
+            { "text": "What is something that has been making you stressed lately but you haven't told anyone about?" }
         ]
     },
     {
         "date": "2024-08-03",
         "prompts": [
-            { "text": "Hello! What is something that happened recently that you regret and that you wish you had done things differently?" },
-            { "text": "Hi! What is something that happened today that you are grateful for and why?" },
-            { "text": "Hey! What is a goal that you have been working on and what are some steps that you have taken towards them recently?" }
+            { "text": "Hi! What's a memory that always makes you happy?" },
+            { "text": "Hello! What's one thing you'd like to improve about today?" },
+            { "text": "What is something that has been making you stressed lately but you haven't told anyone about?" }
         ]
     },
     {
         "date": "2024-08-04",
         "prompts": [
-            { "text": "Hello! What's a challenge you overcame recently?" },
-            { "text": "Hello! What's one thing you'd like to learn this month?" },
-            { "text": "Hello! What's your favorite way to relax?" }
+            { "text": "Hi! What's a memory that always makes you happy?" },
+            { "text": "Hello! What's one thing you'd like to improve about today?" },
+            { "text": "What is something that has been making you stressed lately but you haven't told anyone about?" }
         ]
     },
     {
         "date": "2024-08-05",
         "prompts": [
-            { "text": "Hey! What's a goal you achieved recently?" },
-            { "text": "Hi! What's something that inspired you today?" },
-            { "text": "Hey! What's a hobby you enjoy?" }
+            { "text": "Hi! What's a memory that always makes you happy?" },
+            { "text": "Hello! What's one thing you'd like to improve about today?" },
+            { "text": "What is something that has been making you stressed lately but you haven't told anyone about?" }
         ]
     },
     {
         "date": "2024-08-06",
         "prompts": [
-            { "text": "Hi! What's something you're passionate about?" },
-            { "text": "Hello! What's a skill you'd like to develop?" },
-            { "text": "Hi! What's your favorite way to spend your free time?" }
+            { "text": "Hi! What's a memory that always makes you happy?" },
+            { "text": "Hello! What's one thing you'd like to improve about today?" },
+            { "text": "What is something that has been making you stressed lately but you haven't told anyone about?" }
         ]
     },
     {
         "date": "2024-08-07",
         "prompts": [
-            { "text": "Hey there! What's a favorite memory from childhood?" },
-            { "text": "Hi! What's something you did today that made you proud?" },
-            { "text": "Hello! What's your favorite way to stay active?" }
+            { "text": "Hi! What's a memory that always makes you happy?" },
+            { "text": "Hello! What's one thing you'd like to improve about today?" },
+            { "text": "What is something that has been making you stressed lately but you haven't told anyone about?" }
         ]
     },
     {
