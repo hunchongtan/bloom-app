@@ -5,7 +5,7 @@ import { MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
 import DateTimeHeader from './DateTimeHeader';
 import botMessages from '../../../botMessages.json';
 
-const NewEntry = () => {
+const NewEntryAlt = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0);
