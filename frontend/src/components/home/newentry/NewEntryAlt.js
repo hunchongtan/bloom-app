@@ -6,6 +6,7 @@ import DateTimeHeader from './DateTimeHeader';
 import botMessages from '../../../botMessages.json';
 
 const NewEntryAlt = () => {
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [canSendMessage, setCanSendMessage] = useState(localStorage.getItem('canSendMessage') === 'true');
