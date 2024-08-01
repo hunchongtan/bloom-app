@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import styles from '../../../styles/home/newentry/NewEntry.module.css';
+import styles from '../../../styles/home/newentry/NewEntryAlt.module.css';
 import JournalsNav from "./JournalsNav";
 import { MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
 import DateTimeHeader from './DateTimeHeader';
