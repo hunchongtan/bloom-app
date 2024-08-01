@@ -9,8 +9,8 @@ const NewEntry = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0);
-  const [showPopup, setShowPopup] = useState(false);
   const [chatCreated, setChatCreated] = useState(false);
+  const [inputDisabled, setInputDisabled] = useState(localStorage.getItem('inputDisabled') === 'true');
 
   const userId = localStorage.getItem('userId');
   const today = new Date().toISOString().split('T')[0];
@@ -37,15 +37,11 @@ const NewEntry = () => {
         const userMessages = chatMessages.filter(message => message.role.toLowerCase() === 'user');
 
         const fetchedMessages = [
-          ...userMessages.map(message => ({ text: message.content, sender: 'user', date: message.date }))
+          ...userMessages.map(message => ({ text: stripTag(message.content), sender: 'user', date: message.date }))
         ];
 
         const prompt = getPromptMessage();
         setMessages([{ text: prompt, sender: 'bot' }, ...fetchedMessages]);
-
-        if (fetchedMessages.length >= 1) {
-          setShowPopup(false);
-        }
       } else {
         if (!chatCreated) {
           console.log('No chat found for today. Creating a new chat...');
@@ -60,6 +56,18 @@ const NewEntry = () => {
     };
 
     initialize();
+
+    // Disable input field when user navigates away
+    const handleBeforeUnload = () => {
+      setInputDisabled(true);
+      localStorage.setItem('inputDisabled', 'true');
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, [userId, today, currentBotMessageIndex, getPromptMessage, chatCreated]);
 
   const fetchChats = async (userId) => {
@@ -158,7 +166,6 @@ const NewEntry = () => {
 
     const prompt = getPromptMessage();
     setMessages([{ text: prompt, sender: 'bot' }]);
-    setShowPopup(false);
   };
 
   const handlePrevMessage = () => {
@@ -169,7 +176,6 @@ const NewEntry = () => {
 
     const prompt = getPromptMessage();
     setMessages([{ text: prompt, sender: 'bot' }]);
-    setShowPopup(false);
   };
 
   const handleSubmit = async (e) => {
@@ -209,8 +215,6 @@ const NewEntry = () => {
       if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
         await response.json();
         console.log('Message saved:', payload);
-  
-        setShowPopup(true);
       } else {
         const errorText = await response.text();
         console.error('Error response text:', errorText);
@@ -224,23 +228,24 @@ const NewEntry = () => {
   };
   
   const stripTag = (text) => {
-    return text.replace(' [Chatbot]', '');
+    return text.replace('[Chatbot]', '').trim();
   };
 
-  const closePopup = () => {
-    setShowPopup(false);
+  const handleBack = () => {
+    setInputDisabled(true);
+    localStorage.setItem('inputDisabled', 'true');
   };
 
   return (
     <div>
-      <JournalsNav />
+      <JournalsNav onBack={handleBack} />
       <div className={styles.content}>
         <div className={styles.transcContainer}>
           <DateTimeHeader />
           <div className={styles.chatWindow}>
             {messages.map((message, index) => (
               <div key={index} className={`${styles.message} ${message.sender === 'bot' ? styles.messageBot : styles.messageUser}`}>
-                {stripTag(message.text)}
+                {message.text}
                 {message.sender === 'bot' && (
                   <div className={styles.navigation}>
                     <button onClick={handlePrevMessage} className={styles.navButton} disabled={messages.length > 1}>
@@ -258,22 +263,16 @@ const NewEntry = () => {
         </div>
       </div>
       <form onSubmit={handleSubmit} className={styles.inputForm}>
-        {showPopup && (
-          <div className={styles.popup}>
-            <div className={styles.disabledText}>
-              Thank you for reflecting with us today. Join us again tomorrow!
-            </div>
-            <button className={styles.closeButton} onClick={closePopup}>X</button>
-          </div>
-        )}
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Your entry here"
+          disabled={inputDisabled}
           className={styles.inputFormInput}
+          style={{ backgroundColor: inputDisabled ? 'grey' : 'white' }}
         />
-        <button type="submit" className={styles.inputFormButton}>
+        <button type="submit" className={styles.inputFormButton} disabled={inputDisabled}>
           <MdArrowForwardIos />
         </button>
       </form>
