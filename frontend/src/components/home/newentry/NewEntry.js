@@ -9,7 +9,7 @@ const NewEntry = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0);
-  const [canSendMessage, setCanSendMessage] = useState(false);
+  const [canSendMessage, setCanSendMessage] = useState(localStorage.getItem('canSendMessage') === 'true');
   const [showPopup, setShowPopup] = useState(false);
   const [chatCreated, setChatCreated] = useState(false);
 
@@ -35,12 +35,13 @@ const NewEntry = () => {
         const chatMessages = await fetchMessages(todayChat.chat_id);
         console.log('Fetched today\'s messages:', chatMessages);
 
-        const canSend = checkIfMessageSentToday(chatMessages);
+        const userMessages = chatMessages.filter(message => message.role.toLowerCase() === 'user');
+
+        const canSend = userMessages.length === 0;
         console.log('Can send message today:', canSend);
 
-        setCanSendMessage(!canSend);
-
-        const userMessages = chatMessages.filter(message => message.role.toLowerCase() === 'user');
+        setCanSendMessage(canSend);
+        localStorage.setItem('canSendMessage', canSend.toString());
 
         const fetchedMessages = [
           ...userMessages.map(message => ({ text: message.content, sender: 'user', date: message.date }))
@@ -64,10 +65,15 @@ const NewEntry = () => {
           }
         }
         setCanSendMessage(true);
+        localStorage.setItem('canSendMessage', 'true');
       }
     };
 
-    initialize();
+    if (localStorage.getItem('canSendMessage') === 'false') {
+      setShowPopup(true);
+    } else {
+      initialize();
+    }
   }, [userId, today, currentBotMessageIndex, getPromptMessage, chatCreated]);
 
   const fetchChats = async (userId) => {
@@ -129,11 +135,6 @@ const NewEntry = () => {
     return botMessage ? botMessage.prompts : [];
   };
 
-  const checkIfMessageSentToday = (messages) => {
-    console.log('Checking if message sent today with messages:', messages);
-    return messages.some(message => message.role.toLowerCase() === 'user');
-  };
-
   const createChat = async (userId) => {
     try {
       const apiUrl = '/api';
@@ -190,7 +191,7 @@ const NewEntry = () => {
   
     if (input.trim() === '') return;
   
-    const taggedInput = `${input} [Chatbot]`; // Append [Chatbot] tag here
+    const taggedInput = `[Chatbot] ${input}`; // Append [Chatbot] tag here
     const userMessage = { text: input, sender: 'user' }; // Keep the input without tag for display
     setMessages([...messages, userMessage]);
     console.log('User message added:', userMessage);
@@ -225,6 +226,7 @@ const NewEntry = () => {
   
         setCanSendMessage(false);
         setShowPopup(true);
+        localStorage.setItem('canSendMessage', 'false'); // Set canSendMessage to false
       } else {
         const errorText = await response.text();
         console.error('Error response text:', errorText);
