@@ -9,7 +9,6 @@ const NewEntry = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(localStorage.getItem('currentBotMessageIndex') ? parseInt(localStorage.getItem('currentBotMessageIndex')) : 0);
-  const [canSendMessage, setCanSendMessage] = useState(localStorage.getItem('canSendMessage') === 'true');
   const [showPopup, setShowPopup] = useState(false);
   const [chatCreated, setChatCreated] = useState(false);
 
@@ -37,12 +36,6 @@ const NewEntry = () => {
 
         const userMessages = chatMessages.filter(message => message.role.toLowerCase() === 'user');
 
-        const canSend = userMessages.length === 0;
-        console.log('Can send message today:', canSend);
-
-        setCanSendMessage(canSend);
-        localStorage.setItem('canSendMessage', canSend.toString());
-
         const fetchedMessages = [
           ...userMessages.map(message => ({ text: message.content, sender: 'user', date: message.date }))
         ];
@@ -50,9 +43,8 @@ const NewEntry = () => {
         const prompt = getPromptMessage();
         setMessages([{ text: prompt, sender: 'bot' }, ...fetchedMessages]);
 
-        if (!canSend && fetchedMessages.length >= 1) {
-          console.log('Setting showPopup to true during initialization');
-          setShowPopup(true);
+        if (fetchedMessages.length >= 1) {
+          setShowPopup(false);
         }
       } else {
         if (!chatCreated) {
@@ -64,16 +56,10 @@ const NewEntry = () => {
             setChatCreated(true);
           }
         }
-        setCanSendMessage(true);
-        localStorage.setItem('canSendMessage', 'true');
       }
     };
 
-    if (localStorage.getItem('canSendMessage') === 'false') {
-      setShowPopup(true);
-    } else {
-      initialize();
-    }
+    initialize();
   }, [userId, today, currentBotMessageIndex, getPromptMessage, chatCreated]);
 
   const fetchChats = async (userId) => {
@@ -224,9 +210,7 @@ const NewEntry = () => {
         await response.json();
         console.log('Message saved:', payload);
   
-        setCanSendMessage(false);
         setShowPopup(true);
-        localStorage.setItem('canSendMessage', 'false'); // Set canSendMessage to false
       } else {
         const errorText = await response.text();
         console.error('Error response text:', errorText);
@@ -259,11 +243,11 @@ const NewEntry = () => {
                 {stripTag(message.text)}
                 {message.sender === 'bot' && (
                   <div className={styles.navigation}>
-                    <button onClick={handlePrevMessage} className={styles.navButton} disabled={!canSendMessage}>
+                    <button onClick={handlePrevMessage} className={styles.navButton} disabled={messages.length > 1}>
                       <MdArrowBackIos style={{ marginTop: '5px' }} />
                     </button>
                     <span>{`${currentBotMessageIndex + 1}/3`}</span>
-                    <button onClick={handleNextMessage} className={styles.navButton} disabled={!canSendMessage}>
+                    <button onClick={handleNextMessage} className={styles.navButton} disabled={messages.length > 1}>
                       <MdArrowForwardIos style={{ marginTop: '5px' }} />
                     </button>
                   </div>
@@ -287,11 +271,9 @@ const NewEntry = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Your entry here"
-          disabled={!canSendMessage}
           className={styles.inputFormInput}
-          style={{ backgroundColor: !canSendMessage ? 'grey' : 'white' }}
         />
-        <button type="submit" className={styles.inputFormButton} disabled={!canSendMessage}>
+        <button type="submit" className={styles.inputFormButton}>
           <MdArrowForwardIos />
         </button>
       </form>

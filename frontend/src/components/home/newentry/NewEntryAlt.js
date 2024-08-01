@@ -12,7 +12,6 @@ const NewEntryAlt = () => {
   const [canSendMessage, setCanSendMessage] = useState(localStorage.getItem('canSendMessage') === 'true');
   const [promptMessages, setPromptMessages] = useState([]);
   const [currentBotMessageIndex, setCurrentBotMessageIndex] = useState(0);
-  const [messages, setMessages] = useState([]);
   const [todayChat, setTodayChat] = useState(null);
 
   const userId = localStorage.getItem('userId');
