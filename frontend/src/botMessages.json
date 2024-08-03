@@ -114,9 +114,9 @@
     {
         "date": "2024-08-03",
         "prompts": [
-            { "text": "Hi! What's something interesting you learned recently?" },
-            { "text": "Hello! What's a place you want to visit someday?" },
-            { "text": "Hey! What's your favorite time of the day and why?" }
+            { "text": "What is one happy thing that happened today?" },
+            { "text": "Share with me about an important memory." },
+            { "text": "What's your favorite time of the day and why?" }
         ]
     },
     {
