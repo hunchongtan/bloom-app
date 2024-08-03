@@ -70,5 +70,189 @@
             { "text": "Hey! What's a quote that resonates with you right now?" },
             { "text": "Hello! What's something that made you laugh today?" }
         ]
+    },
+    {
+        "date": "2024-07-21",
+        "prompts": [
+            { "text": "Hello! What's a new habit you're trying to build?" },
+            { "text": "Hey! What's a quote that resonates with you right now?" },
+            { "text": "Hello! What's something that made you laugh today?" }
+        ]
+    },
+    {
+        "date": "2024-07-30",
+        "prompts": [
+            { "text": "Hello! What's a new habit you're trying to build?" },
+            { "text": "Hey! What's a quote that resonates with you right now?" },
+            { "text": "Hello! What's something that made you laugh today?" }
+        ]
+    },
+    {
+        "date": "2024-07-31",
+        "prompts": [
+            { "text": "Hello! What's a new habit you're trying to build?" },
+            { "text": "Hey! What's a quote that resonates with you right now?" },
+            { "text": "Hello! What's something that made you laugh today?" }
+        ]
+    },
+    {
+        "date": "2024-08-01",
+        "prompts": [
+            { "text": "Hi! What's a book you're currently reading or want to read?" },
+            { "text": "Hello! What's your favorite way to relax after a long day?" },
+            { "text": "Hey! What's one thing you're grateful for today?" }
+        ]
+    },
+    {
+        "date": "2024-08-02",
+        "prompts": [
+            { "text": "Hi! What's a hobby you enjoy in your free time?" },
+            { "text": "Hello! What's a goal you have for this week?" },
+            { "text": "Hey! What's a skill you'd like to learn or improve?" }
+        ]
+    },
+    {
+        "date": "2024-08-03",
+        "prompts": [
+            { "text": "Hi! What's something interesting you learned recently?" },
+            { "text": "Hello! What's a place you want to visit someday?" },
+            { "text": "Hey! What's your favorite time of the day and why?" }
+        ]
+    },
+    {
+        "date": "2024-08-04",
+        "prompts": [
+            { "text": "Hi! What's a memory that always makes you smile?" },
+            { "text": "Hello! What's something you're proud of achieving?" },
+            { "text": "Hey! What's your favorite type of music?" }
+        ]
+    },
+    {
+        "date": "2024-08-05",
+        "prompts": [
+            { "text": "Hi! What's your favorite season and why?" },
+            { "text": "Hello! What's a movie or TV show you enjoy?" },
+            { "text": "Hey! What's a random act of kindness you can do today?" }
+        ]
+    },
+    {
+        "date": "2024-08-06",
+        "prompts": [
+            { "text": "Hi! What's your favorite food or cuisine?" },
+            { "text": "Hello! What's a piece of advice you often give others?" },
+            { "text": "Hey! What's a fun fact about you?" }
+        ]
+    },
+    {
+        "date": "2024-08-07",
+        "prompts": [
+            { "text": "Hi! What's a challenge you've overcome recently?" },
+            { "text": "Hello! What's your favorite way to spend a weekend?" },
+            { "text": "Hey! What's something new you tried recently?" }
+        ]
+    },
+    {
+        "date": "2024-08-08",
+        "prompts": [
+            { "text": "Hi! What's your favorite outdoor activity?" },
+            { "text": "Hello! What's a book or movie that changed your perspective?" },
+            { "text": "Hey! What's your go-to comfort food?" }
+        ]
+    },
+    {
+        "date": "2024-08-09",
+        "prompts": [
+            { "text": "Hi! What's a project you're working on or excited about?" },
+            { "text": "Hello! What's your favorite thing about your community?" },
+            { "text": "Hey! What's something you've always wanted to learn?" }
+        ]
+    },
+    {
+        "date": "2024-08-10",
+        "prompts": [
+            { "text": "Hi! What's a recent accomplishment you're proud of?" },
+            { "text": "Hello! What's your favorite way to stay active?" },
+            { "text": "Hey! What's a favorite quote or saying?" }
+        ]
+    },
+    {
+        "date": "2024-08-11",
+        "prompts": [
+            { "text": "Hi! What's a memorable trip you've taken?" },
+            { "text": "Hello! What's something you're looking forward to?" },
+            { "text": "Hey! What's your favorite way to unwind?" }
+        ]
+    },
+    {
+        "date": "2024-08-12",
+        "prompts": [
+            { "text": "Hi! What's a personal goal you're working towards?" },
+            { "text": "Hello! What's your favorite way to express creativity?" },
+            { "text": "Hey! What's something you're curious about?" }
+        ]
+    },
+    {
+        "date": "2024-08-13",
+        "prompts": [
+            { "text": "Hi! What's your favorite way to spend time with family or friends?" },
+            { "text": "Hello! What's a favorite childhood memory?" },
+            { "text": "Hey! What's a new recipe you've tried or want to try?" }
+        ]
+    },
+    {
+        "date": "2024-08-14",
+        "prompts": [
+            { "text": "Hi! What's a recent positive experience you've had?" },
+            { "text": "Hello! What's something you do to stay motivated?" },
+            { "text": "Hey! What's a goal you've set for yourself this year?" }
+        ]
+    },
+    {
+        "date": "2024-08-15",
+        "prompts": [
+            { "text": "Hi! What's your favorite thing about your job or school?" },
+            { "text": "Hello! What's a favorite family tradition?" },
+            { "text": "Hey! What's a place that inspires you?" }
+        ]
+    },
+    {
+        "date": "2024-08-16",
+        "prompts": [
+            { "text": "Hi! What's your favorite way to start your day?" },
+            { "text": "Hello! What's something you learned from a mistake?" },
+            { "text": "Hey! What's a goal you're working towards?" }
+        ]
+    },
+    {
+        "date": "2024-08-17",
+        "prompts": [
+            { "text": "Hi! What's your favorite way to end your day?" },
+            { "text": "Hello! What's something you're passionate about?" },
+            { "text": "Hey! What's a skill you're working on improving?" }
+        ]
+    },
+    {
+        "date": "2024-08-18",
+        "prompts": [
+            { "text": "Hi! What's your favorite way to relax?" },
+            { "text": "Hello! What's a goal you've recently achieved?" },
+            { "text": "Hey! What's a hobby you want to pick up?" }
+        ]
+    },
+    {
+        "date": "2024-08-19",
+        "prompts": [
+            { "text": "Hi! What's your favorite way to stay active?" },
+            { "text": "Hello! What's something you're proud of?" },
+            { "text": "Hey! What's a fun fact about you?" }
+        ]
+    },
+    {
+        "date": "2024-08-20",
+        "prompts": [
+            { "text": "Hi! What's your favorite way to spend a rainy day?" },
+            { "text": "Hello! What's a recent book or movie you enjoyed?" },
+            { "text": "Hey! What's a place you've always wanted to visit?" }
+        ]
     }
 ]
