@@ -1,70 +1,33 @@
-# Getting Started with Create React App
+# Bloom: Increasing Uptake of Journaling Amongst Youths
+<a href="https://hci-bloom.netlify.app/">Netlify App</a> | <a href="https://www.youtube.com/watch?v=TrRwv7YYuPA">Youtube</a>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview 
+This project is an undertaking of SUTD DAI's 60.005 HCI and AI module. The module is an introduction to understanding how to design for people and utilise AI to empower people. With the task being to develop an AI-powered application to empower humans, this project is split into 3 iterations linked below.
 
-## Available Scripts
+## Iterations
+<a href="https://drive.google.com/drive/folders/1PGsyrsdZTiZbgzPRsLthPRVFjpCw2oal?usp=sharing">Iteration 1</a> | <a href="https://drive.google.com/drive/folders/1O_po4xpORzrymc8Q-J2J7Mvsf7uDwWRv?usp=sharing">Iteration 2</a> | <a href="https://drive.google.com/drive/folders/1Oi1pcAKfvLiGlqhTPb-aRApjdUpsYvVt?usp=sharing">Iteration 3</a>
 
-In the project directory, you can run:
+## Poster
+<img src="https://github.com/user-attachments/assets/ae0b9a46-0042-43de-a3df-5d40a3a7e46d" width="500" />
 
-### `npm start`
+## Problem
+Youths today **acknowledge the benefits of journaling**, such as stress relief and improved mindfulness, but they **do not actively engage in the habit of journaling**. Many struggle with the **lack of motivation**, perceiving journaling as a **time-consuming** and **mundane** activity, leading to **inconsistency** for those who already journal and a **lack of initiation** for potential new users.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Solution
+Bloom is our journaling application which addresses these challenges by sending users **spontaneous** daily prompts, helping youths integrate mindfulness and stress relief into their routines **without feeling burdened**. Bloom also features a virtual plot of land where users can plant a flower each time they complete their daily journal entry, thus **rewarding the experience and encouraging consistency**.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Stack Used
+ReactJS, FastAPI, OpenAI API, PostgreSQL
 
-### `npm test`
+## Code Documentation
+This repository only covers the frontend code made with ReactJS. 
+To run this code,
+Run `npm i` to install all necessary dependencies,
+before running `npm run start` to launch the app.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Team
+Delphine Sim Yingting, 1006986 </br>
+Tan Hun Chong, 1006643 </br>
+Tan Ze Lin, 1007054 </br>
+Bannon Tan, 1006928 </br>
+Ong Kang Jun, 100665 </br>
